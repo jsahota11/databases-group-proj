@@ -16,10 +16,10 @@ Completed before this timeline was established
 
 ***Optional ER Diagram Check-In (0%)*** 
 
-Before our meeting:
+Before the meeting:
 
-- every member will create a draft of an ER diagram and point-form justifications before our next meeting
-- KC will summarize our initial write-up into one paragraph (ideally based on Stage 1 feedback, if possible)
+- <u>every member</u> will create a draft of an ER diagram and point-form justifications before our next meeting
+- <u>KC</u> will summarize our initial write-up into one paragraph (ideally based on Stage 1 feedback, if possible)
 
 Meeting on October 2nd at 1pm:
 
@@ -29,10 +29,10 @@ Meeting on October 2nd at 1pm:
 
 After the meeting:
 
-- Ayesha will draw out the diagram by the end of the day on October 2nd
-- every member needs to approve all the work to be submitted (paragraph, ER diagram)
+- <u>Ayesha</u> will draw out the diagram by the end of the day on October 2nd
+- <u>every member</u> needs to approve all the work to be submitted (paragraph, ER diagram)
 
-Ayesha will submit the final copies of everything
+<u>Ayesha</u> will submit the final copies of everything
 
 ## Stage 3 & Reflection #1: due October 10th
 
@@ -40,10 +40,10 @@ Ayesha will submit the final copies of everything
 
 Before the meeting:
 
-- every member will consider how to modify the model based on Stage 1 and 2 feedback, and how to incorporate EER elements
-- Ayesha will modify the Stage 1 write up based on the feedback (as needed)
-- Ayesha will create a draft for the updated timeline
-- Jatinder will begin the process of moving from ER diagram to relational model (without any merging or normalizing)
+- <u>every member</u> will consider how to modify the model based on Stage 1 and 2 feedback, and how to incorporate EER elements
+- <u>Ayesha</u> will modify the Stage 1 write up based on the feedback (as needed)
+- <u>Ayesha</u> will create a draft for the updated timeline
+- <u>Jatinder</u> will begin the process of moving from ER diagram to relational model (without any merging or normalizing)
 
 Meeting on October 7th at 1pm:
 
@@ -55,12 +55,12 @@ Meeting on October 7th at 1pm:
 
 After the meeting: 
 
-- every member is responsible for writing and submitting their personal reflections
-- Ayesha will finish normalizing and finalize the relational model
-- KC will turn bullet points from meeting into 3-5 paragraph group reflection
-- every member needs to approve all the work to be submitted (updated write-up, ER/EER diagram, relational model, reflection)
+- <u>every member</u> is responsible for writing and submitting their personal reflections
+- <u>Ayesha</u> will finish normalizing and finalize the relational model
+- <u>KC</u> will turn bullet points from meeting into 3-5 paragraph group reflection
+- <u>every member</u> needs to approve all the work to be submitted (updated write-up, ER/EER diagram, relational model, reflection)
 
-KC will submit the final copies of everything
+<u>KC</u> will submit the final copies of everything
 
 # Part B: Query & Interface Design
 
@@ -70,7 +70,7 @@ KC will submit the final copies of everything
 
 Before the meeting:
 
-- every member will consider (and perhaps draft up) potential queries for the database
+- <u>every member</u> will consider (and perhaps draft up) potential queries for the database
 
 Meeting: 
 
@@ -78,9 +78,9 @@ Meeting:
 
 After the meeting:
 
-- every member needs to approve all the work to be submitted (ER diagram, potential queries)
+- <u>every member</u> needs to approve all the work to be submitted (ER diagram, potential queries)
 
-Jatinder will submit the final copies of everything
+<u>Jatinder</u> will submit the final copies of everything
 
 ## Stage 5: due November 7th
 
@@ -88,7 +88,7 @@ Jatinder will submit the final copies of everything
 
 Before the 1st meeting: 
 
-- every member will review the feedback from Stage 4 and consider how to improve our queries
+- <u>every member</u> will review the feedback from Stage 4 and consider how to improve our queries
 
 Meeting 1:
 
@@ -107,9 +107,9 @@ Meeting 2:
 
 After the meetings:
 
-- every member needs to approve all the work to be submitted (ER diagram, potential queries)
+- <u>every member</u> needs to approve all the work to be submitted (ER diagram, potential queries)
 
-Ayesha will submit the final copies of everything
+<u>Ayesha</u> will submit the final copies of everything
 
 ## Stage 6 & Reflection #2: due November 21st
 

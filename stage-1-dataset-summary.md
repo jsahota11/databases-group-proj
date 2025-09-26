@@ -42,46 +42,30 @@ describing different entities.
 
 ### Defining entities using the dataset
 
-We consider the tables under the guise of an entity set to establish our entities.
-Common attributes among these entities are UIDs, names (for circuits,
-constructors, drivers, and races), and location/nationality (for circuits,
-constructors, and drivers). Entities also tend to have IDs corresponding to entity
-entries in other tables (like driver ID, circuit ID, constructor ID, etc) where
-appropriate (like for races, driver standings, results, etc). The attribute “points”
-belongs to results, constructor results and standing, as well as driver standings,
-quantifying number of points accumulated across the seasons. In addition, driver
-and constructor standings have an attribute describing the number of wins. An attribute
-regarding position in races and sprints are found in entities for constructor standings,
-driver standings, lap times, sprint results. Date and/or time attributes belong to
-majority of the entities aside from the status entity, where the date and/or time
-attribute may describe data of birth, data of race, year of season, or duration of
-a race. Driver entities have first and last name attributes.
-Remaining attributes are uninteresting.
+We treat the tables as an entity set to establish our entities.
+Common attributes shared among these entities are: UIDs, which are assigned to all entities; names (for circuits,
+constructors, drivers, and races); and location/nationality (for circuits,
+constructors, and drivers). Entities also have IDs—such as driver ID, circuit ID, constructor ID, etc.—that reference entries in other tables like races, driver standings, results, etc. The attribute “points”
+belongs to results, constructor results and standing, as well as driver standings—quantifying number of points accumulated across the seasons. In addition, driver
+and constructor standings have an attribute describing the number of wins. The entities constructor standings, driver standings, lap times, and sprint results, are assigned an attribute
+related to position in races and sprints. Majority of the entities except for the status entity, possess date and/or time attributes—which may describe date of birth, date of race, year of season, or duration of race. Driver entities have distinct first and last name attributes. The remaining attributes will be excluded from this model.
 
 ### On the size of the dataset, and cleaning efforts
 
-Across all files and entity sets, there is a total number of 701433 records.
-Roughly 500000 records come from lap times, which aligns with the fact that
-many races partake in many seasons, all spanning many laps. Aside from that
-outlier, majority of the records come from constructor results and standings,
-driver standings, pit stops, qualifying races, and the results, which all have
-greater than 10000 records. The remaining entity sets of circuits, constructors,
-drivers, races, seasons, sprint results, and status, have between 70 to 1000 records.
-Some of the uninteresting attributes contain NULL values, like status of the
-constructor’s championship results, but some more interesting attributes like race
-lengths are NULL as well. Hence, there is some cleaning that will need to be done
-for this dataset, although not too much, and there are still interesting queries
-that can be considered without cleaning. Omitting the uninteresting attributes
-entirely is plausible since querying for those is not very insightful, but for
-total race lengths, it can be derived from the lap times of the last-place driver
+Across all files and entity sets, there is a total number of 701,433 records.
+The entity, lap times, accounts for approximately 500,000 records—reflecting the
+extensive number of tracked laps across many races and seasons. Excluding the quantity of records contributed by lap times, the remaining records come from constructor results and standings,
+driver standings, pit stops, qualifying races, and the results, with each having
+greater than 10,000 records respectively. The remaining entity sets—circuits, constructors,
+drivers, races, seasons, sprint results, and status—each have between 70 to 1,000 records.
+Dataset cleaning will be necessary due to the presence of NULL values in primary attributes, such as race lengths. We can omit less-essential attributes since querying for such offers limited insight, but total race lengths can be derived from the lap times of the last-place driver
 for any race. This would provide an estimate when the race should end, assuming
 the race did not end due to time constraints. Fortunately, there is a lot of data
-to work with in this dataset, and so we can conveniantly remove any attributes that
+to work with in this dataset—conveniently allowing us to remove any attributes that
 are riddled with NULL values and no sensible default value to replace them with.
 To this end, we may write a python script to simply remove any columns with NULL
 values. Otherwise, for attributes that can support a working default value, we can
 simply replace any NULL values with our chosen default. Creating a script to do this
-is straightforward, but to start with the process, we will create a separate script
-to discover which attributes contian NULL values, and from those, decide on an
-individual basis whether or not we should omit the attribute or substitute in a
-valid default value (if available).
+is straightforward. In order to start with the process, we will create a separate script
+to discover attributes that contain NULL values. Upon the collection of such attributes, we will decide on an individual basis whether or not we should omit the attribute or substitute in a
+valid default value—if available.

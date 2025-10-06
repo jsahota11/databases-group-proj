@@ -1,0 +1,8 @@
+## Dataset Summary
+---
+
+The dataset chosen by our group contains data on the Formula 1 (F1) World Championship from 1950 to 2024. F1 is a world-renowned auto-racing forum, and is widely considered a premier league for circuit racing. The world championships considered in this dataset are entire seasons from years 1950 to 2024. A season spans across approximately one year, from March to December, and each season is composed of a series of races that take place on distinct circuits and public roads across the world. These races are composed of the Grand Prix and sprint races, where a qualifying format is held prior each race to determine starting placement. Points from each races are accumulated and later determine the winners for the constructor championship category and one winner for the driver championship category.
+
+## ER Diagram
+---
+![Alt text](ER%20Diagram.png "ER Diagram for F1")

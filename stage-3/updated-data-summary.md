@@ -27,8 +27,7 @@ pertaining to the following:
 * qualifying sessions
 * circuits
 * lap times
-* pit stops
-* the championships overall
+* the seasons and championships overall
 
 Constructors are the designers and builders of the cars used in races.
 Some additional supporting tables are driver standings, constructor
@@ -42,13 +41,16 @@ describing different entities.
 
 ### Defining entities using the dataset
 
-We treat the tables as an entity set to establish our entities.
-Common attributes shared among these entities are: UIDs, which are assigned to all entities; names (for circuits,
-constructors, drivers, and races); and location/nationality (for circuits,
-constructors, and drivers). Entities also have IDs—such as driver ID, circuit ID, constructor ID, etc.—that reference entries in other tables like races, driver standings, results, etc. The attribute “points”
-belongs to results, constructor results and standing, as well as driver standings—quantifying number of points accumulated across the seasons. In addition, driver
-and constructor standings have an attribute describing the number of wins. The entities constructor standings, driver standings, lap times, and sprint results, are assigned an attribute
-related to position in races and sprints. Majority of the entities except for the status entity, possess date and/or time attributes—which may describe date of birth, date of race, year of season, or duration of race. Driver entities have distinct first and last name attributes. The remaining attributes will be excluded from this model.
+We have translated many of the tables directly to entities (e.g drivers.csv to the entity Driver). 
+In the cases where this didn't make sense, we have instead chosen to move data either into relationships (e.g. putting data from qualifying.csv into the relationship "Races in") or have elected to simply ignore it as it is not relevant to the queries we intend to write (e.g. choosing not the include data from pit_stops.csv). 
+
+We have elected to keep the IDs as assigned in the data for all our entities. 
+For the entities Driver, Constructor, Circuit, Lap, and Season we have pulled all columns from the respectively named table in our dataset as attributes, except in the following cases: the column stored data that would either be unnecessary for the queries we have planned, the data would already be available through a relationship, or each record was mainly null. Certain columns had over 90% of their records as null, so there is no sense in keeping them. This is discussed more below in relation to cleaning the data.
+For the entity Race, we did similarly, though we added a Boolean value that determines if a certain Race is a Grand Prix or a sprint. 
+This information is from sprint_results.csv.
+
+All of the results and data related to them (both for individual races and the seasons overall) are stored in relationships between Race and Driver, and Season and Driver/Constructor. 
+These are either pulled from multiple tables (e.g. constructor_results.csv, results.csv) in the case of Races, or are derived from the points gained in Races (in the case of Seasons).
 
 ### On the size of the dataset, and cleaning efforts
 

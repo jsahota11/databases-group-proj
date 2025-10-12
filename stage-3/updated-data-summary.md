@@ -1,4 +1,4 @@
-# Stage 1: Data Discovery
+# Stage 3: Database Design -- Updated Data Summary
 
 ## Formula 1 World Championship from Vopani “Rohanrao”
 

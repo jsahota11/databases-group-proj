@@ -1,5 +1,61 @@
 # Queries with explanations
 
+Note that for all these queries, we use the season and round to have users identify races. In most cases, we use race/round almost synonymously. 
+
+Constructors a driver has been a part of
+* Lists all the constructors a driver has ever competed with
+
+Winner of the Driver Championship for a season
+* Gets the driver with the most points for a specific season
+
+Winner of the Constructor Championship for a season
+* Gets constructor with the most points for a specific season
+
+Winner of a specific race/round
+* Gets the driver who finished first in the race for a specific round
+
+Number of points earned by a driver (respectively, constructor) during a particular round
+* Takes either a driver or constructor (this is technically 2 different queries) and a specific season and round and returns the number of points they earned in the race for that round
+
+Position during a specific lap
+* Returns the position a driver was in in during a specific lap of a specific race
+
+A driver's fastest lap in a round/race
+* Takes a specific round and driver, and finds their fastest lap in the respective race
+
+A driver's fastest lap in a season
+* Takes a specified driver and season and returns the fastest lap across all races
+  
+Fastest lap overall in a season
+* Looks through all the races and drivers across a particular season and returns the fastest lap driven
+
+Fastest qualifying time in a round (respectively, season)
+* Takes either a season or a season and round (this is technically 2 different queries) and returns the fastest qualifying time and the driver that ran it
+
+Years a driver (respectively, constructor) was active
+* Takes either a driver or constructor (this is technically 2 different queries) and finds every year that they particpated in F1
+
+Coordinates of a circuit
+* Takes a circuit and returns its longitude, latitude, and altitude
+
+Number of times a circuit has been used
+* Calculates how many races have been run on a specific circuit across its entire lifetime
+
+Most used circuit across
+* Counts every time a specific circuit is used across all the seasons and returns the one that is most frequent
+
+Nationality of a driver (respectively, constructor)
+* Takes either a driver or constructor (this is technically 2 different queries) and returns their nationality
+
+All drivers (respectively, constructors) that are from a specific country
+* Takes a country and returns all drivers or constructors (this is technically 2 different queries) that are from that coutnry
+
+Full ranking of drivers for a season
+* Ranks all drivers in a given season by points earned
+
+Drivers that did not reach the end of a race
+* Takes a specific round/race and returns all the drivers that had to stop halfway through (did not have a finish time)
+
 Average lap time for a season (driver-specific or over all drivers)
 
 * Finds the mean (or median) lap time across all races in a given season, either

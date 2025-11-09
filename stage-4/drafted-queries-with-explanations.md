@@ -1,5 +1,8 @@
 # Queries with explanations
 
+Jatinder Sahota, Ayesha Qadir, Kriza Cyrene del Moro
+10/26/25
+
 Note that for all these queries, we use the season and round to have users identify races. In most cases, we use race/round almost synonymously. 
 
 Constructors a driver has been a part of

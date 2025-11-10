@@ -171,3 +171,70 @@ order by avgTime
 limit 1;
 
 Analysts can understand how drivers from different nationalities vary in experience driving on native circuits, and can help provide insights in to better training practices or competitition preparation, as well as circuit selection for future seasons.
+
+## What position was a driver in during a specific lap of a specific race
+
+This query will find a driver's position in a specific lap within a certain race.
+
+SELECT position FROM laptimes WHERE driverID = ? AND raceID = ? AND lapnumber = ?
+
+The user will be inputting the driver ID, race ID, and lap number of the driver, race, and lap number.
+
+This gives room for analysis of a driver's performance overtime, which can help towards the development of strategies for future races.
+
+
+## Who won in a season
+
+SELECT d.driverID, d.firstName, d.lastName SUM(r.points) AS totalPts FROM results r NATURAL JOIN race ra NATURAL JOIN drivers d WHERE ra.year = ? GROUP BY d.driverID ORDER BY totalPts DESC LIMIT 1;
+
+## What are the coordinates of a circuit
+
+SELECT name, lat, lng FROM circuits WHERE circuitID = ?;
+
+## Who won this race
+
+SELECT d.driverID, d.firstName, d.lastName FROM results r NATURAL JOIN drivers d WHERE r.raceId = ? AND r.positionOrder = 1;
+
+## How many points did a driver/constructor get for a specific round
+> Driver
+
+SELECT d.driverID, d.firstName, d.lastName, r.points FROM results r NATURAL JOIN drivers WHERE r.raceID = ?  AND r.driverID = ?;
+
+> Constructor
+
+SELECT c.constructorID, c.name, SUM(r.points) AS totalPts FROM results r NATURAL JOIN constructors c WHERE r.raceID = ? AND c.constructorID = ? GROUP BY c.constructorId, c.name;
+
+## How many championships did a constructor/driver participate in
+> Driver
+
+SELECT d.driverID, d.firstName, d.lastName, COUNT(DISTINCT ra.year) AS seasonsParticipated
+FROM results r NATURAL JOIN drivers NATURAL JOIN races GROUP BY d.driverID, d.firstName, d.lastName;
+
+> Constructor
+
+SELECT c.constructorID, c.name, COUNT(DISTINCT ra.year) AS seasonsParticipated
+FROM results r NATURAL JOIN constructors NATURAL JOIN races GROUP BY c.constructorID, c.name;
+
+## Who had the fastest qualifying time
+
+> Round
+
+SELECT d.driverID, d.firstName, d.lastName, q.q1 AS qualifyingTime
+FROM qualifying q NATURAL JOIN drivers WHERE q.q1 IS NOT NULL UNION
+
+SELECT d.driverID, d.firstName, d.lastName, q.q2 AS qualifyingTime FROM qualifying q JOIN drivers d ON q.driverId = d.driverID WHERE q.q2 IS NOT NULL UNION
+
+SELECT d.driverID, d.firstName, d.lastName, q.q3 AS qualifyingTime FROM qualifying q JOIN drivers d ON q.driverId = d.driverID WHERE q.q3 IS NOT NULL
+
+ORDER BY qualifyingTime ASC LIMIT 1;
+
+> Season
+
+SELECT d.driverId, d.firstName, d.lastName, q.qualifyingTime, r.year
+FROM (
+    SELECT q1 AS qualifyingTime, driverID, raceId FROM qualifying WHERE q1 IS NOT NULL
+    UNION
+    SELECT q2 AS qualifyingTime, driverID, raceId FROM qualifying WHERE q2 IS NOT NULL
+    UNION
+    SELECT q3 AS qualifyingTime, driverID, raceId FROM qualifying WHERE q3 IS NOT NULL
+) AS q NATURAL JOIN drivers NATURAL JOIN races WHERE r.year = ? ORDER BY q.qualifyingTime ASC LIMIT 1;

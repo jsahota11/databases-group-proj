@@ -58,6 +58,7 @@ public class Queries {
 
 			switch (command) {
 				case 1:
+					db.query_1(arg);
 					break;
 
 				case 15:
@@ -116,7 +117,6 @@ public class Queries {
 
 				case 220:
 					break;
-
 				case 231:
 					break;
 
@@ -158,6 +158,26 @@ class Database {
 	}
 
 	public void query_1(String year) {
+		int parsedID = Integer.parseInt(year);
+
+		try {
+
+			String sql = "select d.driverId, d.firstName, d.lastName, sum(dr.driverPoints) as totalPoints from driverRace dr natural join race r natural join driver d where year = ? group by d.driverId, d.firstName, d.lastName order by totalPoints desc";
+
+			PreparedStatement statement = connection.prepareStatement(sql);
+
+			statement.setInt(1, parsedID);
+
+			ResultSet resultSet = statement.executeQuery();
+
+			while (resultSet.next()) {
+				System.out.println(resultSet.getInt("driverID") + " " + resultSet.getString("firstName") + " "
+						+ resultSet.getString("lastName") + " " + resultSet.getInt("totalPoints"));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void query_15(String year) {

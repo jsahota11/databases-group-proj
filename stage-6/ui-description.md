@@ -1,0 +1,13 @@
+# UI Description
+**Group 32: Ayesha Qadir, Jatinder Sahota, Kriza Cyrene del Moro**
+
+Our interface will be a text interface in the form of a REPL. We will be programming it using Java, and it will run directly in the terminal. You will be able to move between categories of queries/information, and will be able to request specific information within each category with given text prompts. There will be a help menu for guidance on what information is available, and how to get there.
+
+## Overall Functionality
+The user will interact with the application through text prompts, guided by the interface. They will be given numbered queries for each category, and will submit the required data to run each query. We will also have a help menu, the main feature of which will be a list of all queries and their categories. This allows a user to search for if the information they're looking for is available in our application, and what category they need to access to get there. 
+
+## Categories
+For drivers and constructors, you are able to choose a specific driver/constructor by name and view all the available information regarding their performance and career in F1. Since we are not using the primary key here for user's convenience, there is a possibility that multiple results will be returned, in particular for driver statistics and information. The data displayed should be fairly short so there will not be an issue displaying multiple entities, and we will ensure our program is able to do so. There is a similar category for races/rounds. As stated in earlier stages, we use round and race somewhat synonymously since a user would identify a particular race by the season and round (each round has one particular race). The last category is the circuits. The user would input a specific season by year, and a round by a number from 1 to 12, and can then ask for information regarding the race of that specific round. There will be one more category for overarching statistics. This is where a lot of our most interesting queries will be, as they aggregate or calculate results over a broader range (e.g. over a season, over the lifetime of a driver, or over the entirety of F1). Again, inputs will be asked for in a similar fashion to the above category. 
+
+## Modifications
+As we have not gotten very far into implementing our UI, there is obviously a lot of possibility for change. If we find that these categories are insufficient, then we will add more. We may also have queries that belong to multiple categories if we find that will be more convenient for the average user. Lastly, more features may be added to the help menu, though they may be largely focused on a user who has no experience with CLIs.

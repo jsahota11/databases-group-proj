@@ -1,3 +1,5 @@
+package com.database.queries;
+
 import java.sql.Connection;
 import java.io.FileInputStream;
 import java.sql.DriverManager;
@@ -18,135 +20,7 @@ import java.util.Scanner;
 // printing pretty
 // perhaps some input santizing if bad params are given (out of bounds IDs for example)
 
-public class Queries {
-	static Connection connection;
-
-	public static void main(String[] args) throws Exception {
-		Database db = new Database();
-		Scanner console = new Scanner(System.in);
-		runConsole(db, console);
-
-		System.out.println("Exiting...");
-		console.close();
-	}
-
-	public static void runConsole(Database db, Scanner console) {
-
-		System.out.println("Welcome to the Formula 1 database! Type h for help. ");
-		System.out.println("Formula 1 DB > ");
-		String line = console.nextLine();
-		String[] tokens;
-
-		while (line != null && !line.equals("q")) { // q is exit
-			tokens = line.split("\\s+");
-
-			String[] args = new String[tokens.length - 1];
-			System.arraycopy(tokens, 1, args, 0, args.length);
-
-			if (line.trim().indexOf(" ") > 0) {
-				args = new String[tokens.length - 1];
-				System.arraycopy(tokens, 1, args, 0, args.length);
-			} // arg provided
-
-			if (tokens[0].equals("h"))
-				printHelp();
-
-			// need to edit this to take any array of args
-			else {
-
-				boolean validIn = validQuery(tokens[0], args, db);
-				if (!validIn) {
-					System.out.println("Please enter a valid option. Type h to print the help menu.");
-				}
-			}
-
-			System.out.println("Formula 1 DB > ");
-			line = console.nextLine();
-
-		}
-	}
-
-	// need to edit this to take any array of args
-	private static boolean validQuery(String input, String[] args, Database db) {
-
-		if (input.equals("dr") && args.length == 1) {
-			db.driverRankings(Integer.parseInt(args[0]));
-		} else if (input.equals("cu") && args.length == 1) {
-			db.circuitUsage(Integer.parseInt(args[0]));
-		} else if (input.equals("dnfs") && args.length == 1) {
-			db.racesDNF(Integer.parseInt(args[0]));
-		} else if (input.equals("mfr")) {
-			db.mostFinishedRaces();
-		} else if (input.equals("meangp") && args.length == 1) {
-			db.averageGridPos(Integer.parseInt(args[0]));
-		} else if (input.equals("oyd") && args.length == 1) {
-			db.extremeAgedDrivers(Integer.parseInt(args[0]));
-		} else if (input.equals("dcp") && args.length == 2) {
-			db.driverContributionsPoints(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
-		} else if (input.equals("dcr") && args.length == 2) {
-			db.driverContributionsRaces(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
-		} else if (input.equals("dp") && args.length == 3) {
-			db.positionInstance(Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]));
-		} else if (input.equals("sw") && args.length == 1) {
-			db.seasonWinner(Integer.parseInt(args[0]));
-		} else if (input.equals("cc") && args.length == 1) {
-			db.circuitCoords(Integer.parseInt(args[0]));
-		} else if (input.equals("rw") && args.length == 1) {
-			db.raceWinner(Integer.parseInt(args[0]));
-		} else if (input.equals("rpd") && args.length == 2) {
-			db.roundPtsDriver(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
-		} else if (input.equals("rpc") && args.length == 2) {
-			db.roundPtsConstructor(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
-		} else if (input.equals("dcc")) {
-			db.driverChampionshipCount();
-		} else if (input.equals("ccc")) {
-			db.constructorChampionshipCount();
-		} else if (input.equals("fqr")) {
-			db.fastestQualInRound();
-		} else if (input.equals("dcl") && args.length == 1) {
-			db.driversConstructorList(Integer.parseInt(args[0]));
-		} else if (input.equals("flr") && args.length == 1) {
-			db.fastestLapInRace(Integer.parseInt(args[0]));
-		} else if (input.equals("dfsl") && args.length == 2) {
-			db.driversFastestSeasonLap(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
-		} else if (input.equals("sfl") && args.length == 1) {
-			db.seasonsFastestLap(Integer.parseInt(args[0]));
-		} else if (input.equals("day") && args.length == 1) {
-			db.driversActiveYears(Integer.parseInt(args[0]));
-		} else if (input.equals("cay") && args.length == 1) {
-			db.constructorsActiveYears(Integer.parseInt(args[0]));
-		} else if (input.equals("muc")) {
-			db.mostUsedCircuit();
-		} else if (input.equals("cn") && args.length == 1) {
-			db.constructorsNationality(Integer.parseInt(args[0]));
-		} else if (input.equals("dn") && args.length == 1) {
-			db.driversNationality(Integer.parseInt(args[0]));
-		} else if (input.equals("sdnf") && args.length == 1) {
-			db.seasonsDNFs(Integer.parseInt(args[0]));
-		} else if (input.equals("dwc") && args.length == 1) {
-			db.driversWinCount(Integer.parseInt(args[0]));
-		} else if (input.equals("ldc")) {
-			db.longestDriverCareer();
-		}
-
-		return true;
-	}
-
-	// this will have the help menu for our DB
-	private static void printHelp() {
-		System.out.println("\n--- HELP START ---\n");
-		System.out.println("h to get help.");
-
-		System.out.println(
-				"<line number> <parameter> - See the corresponding query in the .md file, and provide a parameter if necessary.");
-		System.out.println("Queries 42, 87, 141");
-
-		System.out.println("q to exit the program.\n");
-		System.out.println("--- HELP END ---\n");
-	}
-}
-
-class Database {
+public class Database {
 	private Connection connection;
 
 	public Database() {
@@ -696,14 +570,18 @@ class Database {
 	}
 
 	// who had the fastest qualifying time in a particular round
-	public void fastestQualInRound() {
-		String sql = "select top (1) d.driverId, d.firstname, d.lastname, dr.raceId, dr.qual1 as qualTime from driverRaces dr join drivers d on d.driverId = dr.driverId where dr.qual1 is not null union select top (1) d.driverId, d.firstname, d.lastname, dr.raceId, dr.qual2 as qualTime from driverRaces dr join drivers d on d.driverId = dr.driverId where dr.qual2 is not null union select top (1) d.driverId, d.firstname, d.lastname, dr.raceId, dr.qual3 as qualTime from driverRaces dr join drivers d on d.driverId = dr.driverId where dr.qual3 is not null order by qualTime;";
+	public void fastestQualInRound(int raceId) {
+		String sql = "select top (1) d.driverId, d.firstname, d.lastname, dr.raceId, dr.qual1 as qualTime from driverRaces dr join drivers d on d.driverId = dr.driverId where dr.qual1 is not null and dr.raceId = ? union select top (1) d.driverId, d.firstname, d.lastname, dr.raceId, dr.qual2 as qualTime from driverRaces dr join drivers d on d.driverId = dr.driverId where dr.qual2 is not null and dr.raceId = ? union select top (1) d.driverId, d.firstname, d.lastname, dr.raceId, dr.qual3 as qualTime from driverRaces dr join drivers d on d.driverId = dr.driverId where dr.qual3 is not null and dr.raceId = ? order by qualTime;";
 
 		try {
 
-			Statement statement = connection.createStatement();
+			PreparedStatement statement = connection.prepareStatement(sql);
 
-			ResultSet resultSet = statement.executeQuery(sql);
+			statement.setInt(1, raceId);
+			statement.setInt(2, raceId);
+			statement.setInt(2, raceId);
+
+			ResultSet resultSet = statement.executeQuery();
 
 			while (resultSet.next()) {
 				System.out.println(
@@ -1083,6 +961,95 @@ class Database {
 				System.out.println(resultSet.getInt("driverId") + ": " + resultSet.getString("firstname") + " "
 						+ resultSet.getString("lastname") + " drove competitively in F1 for "
 						+ resultSet.getInt("activeYears") + " years.");
+			}
+
+			System.out.println();
+
+		} catch (SQLException e) {
+			System.out.println("Something went wrong...");
+			e.printStackTrace();
+		}
+	}
+
+	public void allConstructors() {
+		String sql = "select * from constructors;";
+		try {
+
+			Statement statement = connection.createStatement();
+
+			ResultSet resultSet = statement.executeQuery(sql);
+
+			while (resultSet.next()) {
+				System.out.println(resultSet.getInt("constructorId") + ": " + resultSet.getString("name") + ", "
+						+ resultSet.getString("nationality"));
+			}
+
+			System.out.println();
+
+		} catch (SQLException e) {
+			System.out.println("Something went wrong...");
+			e.printStackTrace();
+		}
+	}
+
+	public void allRaces() {
+		String sql = "select * from races;";
+		try {
+
+			Statement statement = connection.createStatement();
+
+			ResultSet resultSet = statement.executeQuery(sql);
+
+			while (resultSet.next()) {
+				System.out.println(resultSet.getInt("raceId") + ": Round " + resultSet.getInt("round") + ", Date: "
+						+ resultSet.getString("date") + ", Name: " + resultSet.getString("name") + ", Circuit ID: "
+						+ resultSet.getInt("circuitId") + ", Year: " + resultSet.getInt("season"));
+			}
+
+			System.out.println();
+
+		} catch (SQLException e) {
+			System.out.println("Something went wrong...");
+			e.printStackTrace();
+		}
+	}
+
+	public void allCircuits() {
+		String sql = "select * from circuits;";
+		try {
+
+			Statement statement = connection.createStatement();
+
+			ResultSet resultSet = statement.executeQuery(sql);
+
+			while (resultSet.next()) {
+				System.out.println(
+						resultSet.getInt("circuitId") + " - Name: " + resultSet.getString("name") + ", Location: "
+								+ resultSet.getString("location") + ", " + resultSet.getString("country") + ", ("
+								+ resultSet.getFloat("lat") + ", " + resultSet.getFloat("lng") + ", "
+								+ resultSet.getFloat("alt") + ")");
+			}
+
+			System.out.println();
+
+		} catch (SQLException e) {
+			System.out.println("Something went wrong...");
+			e.printStackTrace();
+		}
+	}
+
+	public void allDrivers() {
+		String sql = "select * from drivers;";
+		try {
+
+			Statement statement = connection.createStatement();
+
+			ResultSet resultSet = statement.executeQuery(sql);
+
+			while (resultSet.next()) {
+				System.out.println(resultSet.getInt("driverId") + " - Name: " + resultSet.getString("firstname") + " "
+						+ resultSet.getString("lastname") + ", DOB: " + resultSet.getString("dob") + ","
+						+ resultSet.getString("nationality"));
 			}
 
 			System.out.println();

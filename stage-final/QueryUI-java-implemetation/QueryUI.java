@@ -1,4 +1,4 @@
-import com.database.queries.Queries;
+import com.database.queries.Database;
 
 import java.util.Scanner;
 
@@ -13,12 +13,16 @@ public class QueryUI {
 
     // For developer comments: Please see README.md for more information!
 
+    static Database db = new Database();
+
     public static void main(String[] args) {
         runMenu();
     }
 
     // Method to run the main menu
     public static void runMenu() {
+        // declare DB
+
         // Scanner declare
         Scanner sc = new Scanner(System.in);
         boolean exit = false; // assume default run state (not exiting)
@@ -611,14 +615,13 @@ public class QueryUI {
     // 1) Given a season, return the rankings of all drivers that had completed at
     // least one race in that season
     private static void driverRankingPerSeason(int seasonYear) {
-        // TODO: implement SQL query
-        System.out.println("TEST Querying for year " + seasonYear);
+        db.driverRankings(seasonYear);
     }
 
     // 2) Determines the length of the career of each driver that has ever
     // participated in F1, and returns the one with the longest.
     private static void longestParticipatingDriver(int driverID) {
-        // TODO: implement SQL query
+        db.longestDriverCareer();
     }
 
     // 3) Given a season, find the oldest and youngest drivers.
@@ -633,12 +636,12 @@ public class QueryUI {
 
     // 4) Who won in a season
     private static void driverWinnerInSeason(int seasonYear) {
-        // TODO: implement SQL query
+        db.seasonWinner(seasonYear);
     }
 
     // 5) Who had the fastest qualifying time in a particular round
     private static void fastestQualifyingTimeInRound(int raceID) {
-        // TODO: implement SQL query
+        db.fastestQualInRound();
     }
 
     // 6) Who had the fastest qualifying time in a particular season

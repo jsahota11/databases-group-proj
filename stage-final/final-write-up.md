@@ -22,29 +22,25 @@
 
 1. [Introduction](#introduction)
 2. [Data](#data)
-3. [Database](#database)
-4. [Interface](#interface)
-5. [Conclusion](#conclusion)
-6. [Appendix](#appendix)
+3. [Data Model](#data-model)
+4. [Database](#database)
+5. [Interface](#interface)
+6. [Queries](#queries)
+7. [Conclusion](#conclusion)
+8. [Appendix](#appendix)
 
 
 ## Introduction
-insert intro here
+
+Our group chose to model all data from all the past seasons of Formula 1. There's a lot of potential for analysis, and a well-designed data model will best allow for that. We included as much data as possible to allow for full analysis (or for full access to data for a layperson). Our UI is a lightweight text-based interface. It categorizes all available queries to make the data easily accessible, and takes into account those who are less experienced with CLIs by including a help menu. This report details the process of creating this project, and further explains its features.
 
 ## Data
-### some stuff from stage 1 write-up
-## Formula 1 World Championship from Vopani “Rohanrao”
 
-Sourced from Kaggle
-<https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020>
+Our data was retrieved from the dataset Formula 1 World Championship from Vopani “Rohanrao”, sourced from Kaggle. It contains data on the Formula 1 (F1) World Championship from 1950 to 2024. 
 
----
+F1 is a world-renowned auto-racing forum, and is widely considered a premier league for circuit racing. The world championships considered in this dataset are entire seasons appearing in any given year. One season comprises a series of 12 races that takes place on distinct circuits across the world, alongside qualifying rounds that precede them. Constructors are the designers and builders of the cars used in races, and each racer belongs to a constructor and races for them throughout each season.
 
-The dataset chosen by our group contains data on the Formula 1 (F1) World Championship from 1950 to 2024. F1 is a world-renowned auto-racing forum, and is widely considered a premier league for circuit racing. The world championships considered in this dataset are entire seasons appearing in any given year. One season comprises a series of races that takes place on distinct circuits and public roads across the world. The collection of races in sequence is referred to as “Grand Prix.”
-
-__Data contained in the file(s)__
-
-The contents of this dataset are measured from the World Championships mentioned before. Specifically, the data consists of tables pertaining to the following:
+The data consists of tables pertaining to the following:
 
 * races
 * drivers
@@ -52,55 +48,133 @@ The contents of this dataset are measured from the World Championships mentioned
 * qualifying sessions
 * circuits
 * lap times
-* pit stops
 * the championships overall
 
-Constructors are the designers and builders of the cars used in races. Some additional supporting tables are driver standings, constructor standings and results, as well as sprint results. Sprints or sprint races are shorter than circuits and do not require any driver to stop for pit stops.The dataset is split into distinct files consisting of tables for the above data, and so we may prescribe entities using those tables. Then, much of the relevant data from the tables can be considered attributes, which we describe below. A last file designated “status” simply carries a mapping of various statuses describing different entities.
+These had attributes like identifying information (name, code, nationality, etc.), and times and positions(for qualifying sessions and lap times). Some additional supporting tables are driver standings, constructor standings and (race) results, as well as sprint results. Sprints or sprint races are shorter than circuits and do not require any driver to stop for pit stops. 
 
-__Defining entities using the dataset__
+When deciding on a dataset, we chose this one because we felt it would divide well into entities. Each aspect of F1 listed above is closely related, but still has it's own extensive set of data and attributes. Additionally, it had lots of records since it included all of F1's history. 
 
-We treat the tables as an entity set to establish our entities. Common attributes shared among these entities are: UIDs, which are assigned to all entities; names (for circuits, constructors, drivers, and races); and location/nationality (for circuits, constructors, and drivers). Entities also have IDs—such as driver ID, circuit ID, constructor ID, etc.—that reference entries in other tables like races, driver standings, results, etc. The attribute “points” belongs to results, constructor results and standing, as well as driver standings—quantifying number of points accumulated across the seasons. In addition, driver and constructor standings have an attribute describing the number of wins. The entities constructor standings, driver standings, lap times, and sprint results, are assigned an attribute related to position in races and sprints. Majority of the entities except for the status entity, possess date and/or time attributes—which may describe date of birth, date of race, year of season, or duration of race. Driver entities have distinct first and last name attributes. The remaining attributes will be excluded from this model.
+Across all files and entity sets, there is a total number of 701,433 records. Lap times account for approximately 500,000 records. Excluding the quantity of records contributed by lap times, the remaining records come from constructor results and standings, driver standings, pit stops, qualifying races, and the results, with each having greater than 10,000 records respectively. The remaining entity sets—circuits, constructors, drivers, races, seasons, sprint results, and status—each have between 70 to 1,000 records.
 
-__On the size of the dataset, and cleaning efforts__
+Our dataset required quite a bit of cleaning, largely in the form of cutting attributes we felt weren't necessary. Many were cut due to having excessive null values, though some (like information on pit stops) were cut to keep the scope of our project more reasonable. 
 
-Across all files and entity sets, there is a total number of 701,433 records. The entity, lap times, accounts for approximately 500,000 records—reflecting the extensive number of tracked laps across many races and seasons. Excluding the quantity of records contributed by lap times, the remaining records come from constructor results and standings, driver standings, pit stops, qualifying races, and the results, with each having greater than 10,000 records respectively. The remaining entity sets—circuits, constructors, drivers, races, seasons, sprint results, and status—each have between 70 to 1,000 records. Dataset cleaning will be necessary due to the presence of NULL values in primary attributes, such as race lengths. We can omit less-essential attributes since querying for such offers limited insight, but total race lengths can be derived from the lap times of the last-place driver for any race. This would provide an estimate when the race should end, assuming the race did not end due to time constraints. Fortunately, there is a lot of data to work with in this dataset—conveniently allowing us to remove any attributes that are riddled with NULL values and no sensible default value to replace them with. To this end, we may write a python script to simply remove any columns with NULL values. Otherwise, for attributes that can support a working default value, we can simply replace any NULL values with our chosen default. Creating a script to do this is straightforward. In order to start with the process, we will create a separate script to discover attributes that contain NULL values. Upon the collection of such attributes, we will decide on an individual basis whether or not we should omit the attribute or substitute in a valid default value—if available.
+We also added on table on our own, made from scratch. Locale was created by hand to map nationalities to their countries.
+
+This is the final version of the ER diagram that we created based off of the dataset.
+- insert ER diagram here
+
+## Data Model
+
+Most of our entities are organized the same way our dataset is. As mentioned above, we picked a dataset that we felt would easily divide into entities, so this is expected. Most of the design decisions were made regarding the relationships between them. 
+
+A few of them are fairly straightforward (a Constructor has many Drivers within it, so of course there would be a relationship there). The relationships "Part of", "Happens on", and "Makes up" fall into this category. However, the rest are a bit more complicated.
+
+We initially had Lap solely related to Race, as it felt the most straightforward. That created the problem of needing an additional relationship with Driver since Lap needs foreign keys from both, so we decided instead to make "Recorded in" a ternary relationship. We debated back and forth about having an entity for the championship(s), and also whether we should separate the driver and constructor championships. In the end, we elected to make it 2 relationships because every Season needs to have both championships, but the championships on their own didn't have any attributes. The most complicated relationship is "Races in". This holds all the information from the qualifying format that determines precedes the race, the constructor each driver is racing for, the results of the race (final position and rank), and the points that both the driver and their respective constructor accumulates. We tried very hard to break this into some more constituent parts, but so many of these parts are integral to each race, so consolidating it into one relationship between Driver and Race seemed to make the most sense. Locale was connected later to convert the country the Circuits were located in to nationalities. 
+
+Despite picking our dataset with future steps in mind, it clearly did not fit into a relational model as cleanly as we had hoped. We had to make some changes to the model when we began implementing our queries; in particular, adding Locale as an entity. We also went back and forth on keeping qualifyingTimes in the "Races in" relationship, or just cutting the qualifying session data entirely. We also initially removed milliseconds from the Lap data, but ended up adding it back in later as it made calculating times a lot easier. 
+
+The last, and more overarching, regret was choosing something all of us were so unfamiliar with. We initially thought it would be a fun learning opportunity because we were all interested in it, but it made communication a bit more difficult than we expected as we were all at different levels of understanding during certain parts of the project. We realized this issue early on, but chose to put more effort into our communication rather than restart our project. Despite the difficulties, we feel it was the right decision.
 
 
 ## Database
-### some stuff from stage 3 write-up (to be deleted later)
-As explained in the summary of our data, most of our entities are organized the same way our dataset is. Most of the design decisions were made regarding the relationships between them. A few of them are fairly straightforward (a Constructor has many Drivers within it, so of course there would be a relationship there). The relationships "Part of", "Happens on", and "Makes up" fall into this category. However, the rest are a bit more complicated.
+- A discussion of the database (flavour of SQL, etc.)
 
-We initially had Lap solely related to Race, as it felt the most straightforward. That created the problem of needing an additional relationship with Driver since Lap needs foreign keys from both, so we decided instead to make "Recorded in" a ternary relationship. We debated back and forth about having an entity for the championship(s), and also whether we should separate the driver and constructor championships. In the end, we elected to make it 2 relationships because every Season needs to have both championships, but the championships on their own didn't have any attributes. The most complicated relationship is "Races in". This holds all the information from the qualifying format that determines precedes the race, the constructor each driver is racing for, the results of the race (final position and rank), and the points that both the driver and their respective constructor accumulates. We tried very hard to break this into some more constituent parts, but so many of these parts are integral to each race, so consolidating it into one relationship between Driver and Race seemed to make the most sense.
+Our database is hosted on Uranium, and all our queries are written in Microsoft SQL. They were originally written for SQLite, but had to be re-written for Uranium. 
 
-We decided to set the following cardinality constraints for our different relationships: driver races in race, with M-N; race happens on circuit, with M-1; race makes up season, with M-1; driver part of constructor, with M-N; lap is recorded in race and driver, with M-1-1; driver participates in driver championship, with M-N; and driver participates in constructor championship, with M-N. The justifications are as follows: driver and races have a M-N relationship, as a single driver can participate in many races, and a single race has many drivers; race and circuits have an M-1 relationship, as a single particular race can only happen on one circuit, and one circuit can host multiple races; race and season have an M-1 because many races combined form a specific, single season;  driver and constructor have an M-N relationship, since drivers can be a part of multiple constructors in one season, and a single constructor is composed of multiple drivers;  laps, race, and drive have an M-1-1 relationship, due to the fact that a single instance of a driver and race can define many laps, whereas a single lap instance is tied solely to one driver in one particular race; driver has a M-N relationship for both driver and constructor championships, as a single driver participates in both driver and constructor championships in a single season, and a each championships has many drivers competing.
+- genuinely don't know what else to add here
+
 
 ## Interface
+Our project has a text interface in the form of a REPL, programmed in Java. It is run directly in the terminal. The user interacts wth the program through text inputs, guided by prompts from the interface. There are many categories of queries/information, with numbered queries in each category. 
+
+There is a help meny available for guidance if need be. It contains a list of all the available information and where it can be found, as well as an overview of how to use the program. 
+
+- insert how the user actually works it (the nitty gritty details)
+
+Below are screenshots of some pieces of the UI in action. 
+- insert screenshots here
+
 ### some stuff from the stage 6 write-up (to be deleted later)
-Our interface will be a text interface in the form of a REPL. We will be programming it using Java, and it will run directly in the terminal. You will be able to move between categories of queries/information, and will be able to request specific information within each category with given text prompts. There will be a help menu for guidance on what information is available, and how to get there.
-
-__Overall Functionality__
-
-The user will interact with the application through text prompts, guided by the interface. They will be given numbered queries for each category, and will submit the required data to run each query. We will also have a help menu, the main feature of which will be a list of all queries and their categories. This allows a user to search for if the information they're looking for is available in our application, and what category they need to access to get there. 
-
-We have structured our queries in such a way that large volumes of data should not be returned very often. We will try to ensure that our application can handle such output, but it should not be an issue and so we will not put a huge focus on it.
 
 __Categories__
 For drivers and constructors, you are able to choose a specific driver/constructor by name and view all the available information regarding their performance and career in F1. Since we are not using the primary key here for user's convenience, there is a possibility that multiple results will be returned, in particular for driver statistics and information. The data displayed should be fairly short so there will not be an issue displaying multiple entities, and we will ensure our program is able to do so. There is a similar category for races/rounds. As stated in earlier stages, we use round and race somewhat synonymously since a user would identify a particular race by the season and round (each round has one particular race). The last category is the circuits. The user would input a specific season by year, and a round by a number from 1 to 12, and can then ask for information regarding the race of that specific round. There will be one more category for overarching statistics. This is where a lot of our most interesting queries will be, as they aggregate or calculate results over a broader range (e.g. over a season, over the lifetime of a driver, or over the entirety of F1). Again, inputs will be asked for in a similar fashion to the above category. 
 
+## Queries
+
+Below is a list of the most interesting queries we implemented, alongside an explanation of why they are valuable from an analyst's perspective.
+
+### Which driver contributed the most to a specific constructor in a season based on points earned
+
+Given a season, find the driver that contributed the most to a given constructor. The metric is points earned across all races. The user will input the year of the season and the ID of the constructor. Names are unique in the dataset.
+
+This helps analysts see which drivers are the best at contributing to specific constructors, and can help make business decisions when signing on new drivers.
+
+### Which driver contributed the most to a specific constructor in a season based on races completed
+
+Similar to above, but the metric is now the amount of races the driver had completed.
+
+Same as previous.
+
+### Which nationality drove the fastest average lap on circuits native to their country
+
+Considering all nationalities any driver can be, find the nationality that, when racing on circuits native to their country, tend to complete the races in the fastest time.
+
+Analysts can understand how drivers from different nationalities vary in experience driving on native circuits, and can help provide insights in to better training practices or competitition preparation, as well as circuit selection for future seasons.
+
+### Average lap time over the entirety of a given season
+Given a specific season, takes the performance of all drivers in every race during that season into account and returns the average lap time. 
+
+Analysts can use this to compare the overall performance of the drivers during a certain season. During a broader analysis, it could be used to help gauge the difficulty of certain tracks and see if different combinations lead to a harder season overall.
+
+### Which race in a give season had the most drivers who did not finish (DNF)
+Given a specific season, counts all the DNFs for each race and returns the one with the highest count. 
+
+Analysts could gauge the difficulty of a specific circuit, or judge the performance of drivers on the same circuit from year to year. 
+
+
 ## Conclusion
 
+The complexity and close knit relationships make a relational database a good choice for this dataset. There may be some advantages of other database systems, but those would mostly be in the realm of the simpler queries. For example, a graph based database system might have an easier time determining things like the fastest lap, or most commonly used circuit. However, our more complex queries require the benefits of a relational database to run. A good example is determining which nationality of drivers drove the fastest average lap on circuits native to their country. Such a query requires a relational database, and could not be re-created easily with other database systems. 
+
+There are a lot of things that could be done with this database as a teaching tool. It may be a good series of activities, as we believe there are still many things to be done. There are some drawbacks to the way we organized our data, and there are many, many more queries that could be created. We imagined a series of in-class activities, where students are given the data and a specific optimization or modification to implement. However, we also all believe that this would not be a good dataset to attempt that with, as F1 is a relatively difficult subject to understand. As mentioned earlier, our own team had communication issues since we were all unfamiliar with the event. Despite spending lots of time researching and discussing it, none of us found it very intuitive to understand, and thus, we don't believe a classroom full of students would either. 
+
+This dataset and the database we created for it are robust and have a lot of potential for analysis. We organized the relational model in such a way that optimizes for that analysis. Our queries cover the breadth of the information we gathered from the dataset, and also contain lots of analytical queries that would help in potential correlations and trends among successful drivers and teams. Though we don't believe it would be a great teaching tool for this course, it is a useful and intriguing application for anyone with even a interest in Formula 1.
 
 ## Appendix
+
 ### Stage 1
+- All 3 members helped look for and decide on a dataset
+- Ayesha wrote the project timeline
+- Jatinder wrote the summary of dataset, created a Git repository for the project, and submitted all finished work
 
 ### Stage 2
+- All 3 members discussed and decided on how to separate the dataset into entities and relationships
+- KC wrote the summary paragraph for the dataset
+- Ayesha drew the ER diagram, and submitted all finished work
 
 ### Stage 3
+- All 3 members dicussed and decided how to modify the ER diagram based on feedback from earlier stages, and made a bullet-point draft of the group reflection together
+- Ayesha modified the Stage 1 summary of the dataset as needed and updated the timeline
+- Jatinder converted the ER diagram to the relational model, including merging and normalizing
+- KC wrote the group reflection based on the group's bullet-point notes, and submitted all finished work
 
 ### Stage 4
+- All 3 members brainstormed and decided on queries together, and discussed how to implement feedback from earlier stages
+- Jatinder submitted the finalized list of queries
 
 ### Stage 5
+- All 3 members discussed how to implement Stage 4 feedback, and implemented approximately 1/3 of the group's queries along with writing descriptions for them
+- Ayesha submitted final copies of everything (though due to some issues with Git, one member's work did not get submitted)
 
 ### Stage 6
+- All 3 members discussed and decided on UI design, and made a bullet-point draft of the group reflection together
+- Ayesha wrote out the group reflection and the UI description, and created the diagrams for the UI
+- Jatinder updated the group timeline 
+- KC cleaned all the data in preparation for the final stage, and submitted all finished work
 
 ### Final Stage
+- All 3 members continually discussed and decided on minor changes and implementation details, made a bullet-point draft of the group reflection together, and rehearsed for the final demonstration together
+- Ayesha wrote the final write-up and final reflection based on the group's bullet-point notes
+- KC implemented the frontend/UI in Java, including creating scaffolding for the backend to be connected
+- Jatinder set up the database on Uranium, implemented all queries to work on Uranium and connect to the frontend, connected the front- and backend, and submitted all finished work
+

@@ -29,7 +29,7 @@ public class QueryUI {
         while (!exit) { // while user has not exited
             printMenu(); // show main menu
             System.out.println("[SYSTEM] Key in your selection below.\n"); // for user input
-            System.out.print("> "); // for user input
+            System.out.print("db > "); // for user input
             String input = sc.nextLine().strip();
             if (validMenuInput(input)) { // user picked between 1-7
                 switch (Integer.parseInt(input)) {
@@ -49,9 +49,25 @@ public class QueryUI {
                         queryGenStats();
                         break;
                     case 6:
-                        runHelpMenu();
+                        System.out.println("--- DRIVERS INFORMATION ---");
+                        db.allDrivers();
                         break;
                     case 7:
+                        System.out.println("--- CONSTRUCTORS INFORMATION ---");
+                        db.allConstructors();
+                        break;
+                    case 8:
+                        System.out.println("--- CIRCUITS INFORMATION ---");
+                        db.allCircuits();
+                        break;
+                    case 9:
+                        System.out.println("--- RACES INFORMATION ---");
+                        db.allRaces();
+                        break;
+                    case 10:
+                        runHelpMenu();
+                        break;
+                    case 11:
                         System.out.println("[SYSTEM] Quitting application. . .");
                         exit = true;
                         break;
@@ -89,7 +105,7 @@ public class QueryUI {
             switch (input) { // diff query cases
                 case 1: // Driver ranking query... and so on
                     System.out.println("[SYSTEM] To query for 'Driver rankings in a season', key in: year\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     String dbCommand = sc.nextLine().strip(); // take input for command
                     if (validateDrQueryInput(dbCommand, input)) { // ensure command is valid based on picked query
                         String[] tokens = dbCommand.split(" ");
@@ -101,7 +117,7 @@ public class QueryUI {
                 case 2:
                     System.out.println(
                             "[SYSTEM] To query for 'Driver who has been active the longest in F1', key in: year\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -112,7 +128,7 @@ public class QueryUI {
                     break;
                 case 3:
                     System.out.println("[SYSTEM] To query for 'Oldest/Youngest driver in a season', key in: year\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -124,7 +140,7 @@ public class QueryUI {
                 case 4:
                     System.out
                             .println("[SYSTEM] To query for 'Driver championship winner in a season', key in: year\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -136,7 +152,7 @@ public class QueryUI {
                 case 5:
                     System.out.println(
                             "[SYSTEM] To query for 'Driver with fastest qualifying time in a round', key in: year\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -148,7 +164,7 @@ public class QueryUI {
                 case 6:
                     System.out.println(
                             "[SYSTEM] To query for 'Driver with fastest qualifying time in a season', key in: year\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -160,7 +176,7 @@ public class QueryUI {
                 case 7:
                     System.out.println(
                             "[SYSTEM] To query for 'Driver's average grid position for all seasons', key in: year\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -172,7 +188,7 @@ public class QueryUI {
                 case 8:
                     System.out.println(
                             "[SYSTEM] To query for 'Driver's specific position in specific lap # for a certain race', key in: year\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -185,7 +201,7 @@ public class QueryUI {
                 case 9:
                     System.out.println(
                             "[SYSTEM] To query for 'Driver's total points in a specific round', key in: year\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -197,7 +213,7 @@ public class QueryUI {
                 case 10:
                     System.out.println(
                             "[SYSTEM] To query for 'Driver's number of participated championships', key in: year\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -208,7 +224,7 @@ public class QueryUI {
                     break;
                 case 11:
                     System.out.println("[SYSTEM] To query for 'Driver's constructor history', key in: year\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -220,7 +236,7 @@ public class QueryUI {
                 case 12:
                     System.out.println(
                             "[SYSTEM] To query for 'Driver's fastest lap in a specific season', key in: year\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -231,7 +247,7 @@ public class QueryUI {
                     break;
                 case 13:
                     System.out.println("[SYSTEM] To query for 'Driver's active years in F1', key in: year\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -242,7 +258,7 @@ public class QueryUI {
                     break;
                 case 14:
                     System.out.println("[SYSTEM] To query for 'Driver's nationality', key in: year\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -254,7 +270,7 @@ public class QueryUI {
                 case 15:
                     System.out.println(
                             "[SYSTEM] To query for 'Driver's average lap time in a specific season', key in: year\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -266,7 +282,7 @@ public class QueryUI {
                 case 16:
                     System.out.println(
                             "[SYSTEM] To query for 'Driver's total number of driver championship wins', key in: year\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -294,7 +310,7 @@ public class QueryUI {
             switch (input) { // diff query cases
                 case 1:
                     System.out.println("[SYSTEM] To query for 'Least active constructor in a season', key in: year\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     String dbCommand = sc.nextLine().strip();
                     if (validateConstQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -306,7 +322,7 @@ public class QueryUI {
                 case 2:
                     System.out.println(
                             "[SYSTEM] To query for 'Driver with the most point contribution in a specific constructor', key in: constructorID, year\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateConstQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -318,7 +334,7 @@ public class QueryUI {
                 case 3:
                     System.out.println(
                             "[SYSTEM] To query for 'Driver with the most races in a specific constructor in a specific season', key in: constructorID, year\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateConstQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -330,7 +346,7 @@ public class QueryUI {
                 case 4:
                     System.out.println(
                             "[SYSTEM] To query for 'Constructor's total points in a certain round', key in: constructorID, raceID\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateConstQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -342,7 +358,7 @@ public class QueryUI {
                 case 5:
                     System.out.println(
                             "[SYSTEM] To query for 'Constructor's total of participated championships', key in: constructor ID\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateConstQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -354,7 +370,7 @@ public class QueryUI {
                 case 6:
                     System.out.println(
                             "[SYSTEM] To query for ' Constructor's years of activity', key in: constructorID\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateConstQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -365,7 +381,7 @@ public class QueryUI {
                     break;
                 case 7:
                     System.out.println("[SYSTEM] To query for 'Constructor's nationality', key in: constructorID\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateConstQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -398,7 +414,7 @@ public class QueryUI {
                 case 2:
                     System.out.println(
                             "[SYSTEM] To query for 'Total races held in each circuit for a specific season', key in: year\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     String dbCommand = sc.nextLine().strip();
                     if (validateCircQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -414,7 +430,7 @@ public class QueryUI {
                 case 4:
                     System.out.println(
                             "[SYSTEM] To query for 'Circuits located in specific hemispheres of the globe', key in: hemisphere <EXPECTED: 'north', 'south', 'east', 'west'>\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateCircQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -427,7 +443,7 @@ public class QueryUI {
                 case 5:
                     System.out
                             .println("[SYSTEM] To query for 'Coordinates of a specific circuit', key in: circuitID\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateCircQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -456,7 +472,7 @@ public class QueryUI {
                 case 1:
                     System.out.println(
                             "[SYSTEM] To query for 'Races with the most DNF's (Did Not Finish)', key in: year\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     String dbCommand = sc.nextLine().strip();
                     if (validateRaceQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -468,7 +484,7 @@ public class QueryUI {
                 case 2:
                     System.out.println(
                             "[SYSTEM] To query for 'DNF count of each race in a specific season', key in: raceID\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateRaceQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -479,7 +495,7 @@ public class QueryUI {
                     break;
                 case 3:
                     System.out.println("[SYSTEM] To query for 'Winner of a specific race', key in: raceID\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateRaceQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -491,7 +507,7 @@ public class QueryUI {
                 case 4:
                     System.out.println(
                             "[SYSTEM] Driver with the fastest recorded lap time in a specific race', key in: raceID\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateRaceQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -525,7 +541,7 @@ public class QueryUI {
                 case 2:
                     System.out.println(
                             "[SYSTEM] To query for 'Fastest lap recorded across all races in a specific season', key in: year\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     String dbCommand = sc.nextLine().strip();
                     if (validateGenStatQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -537,7 +553,7 @@ public class QueryUI {
                 case 3:
                     System.out.println(
                             "[SYSTEM] To query for 'Average lap time of all drivers across all races in a given season', key in: year\n");
-                    System.out.print("> ");
+                    System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateGenStatQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
@@ -570,7 +586,7 @@ public class QueryUI {
         printHelpMenu();
         // while user has not chosen to exit
         while (!exit) { // clean this up more later
-            System.out.print("> ");
+            System.out.print("db > ");
             String input = sc.nextLine().strip(); // keep asking for input until user chooses to exit
                                                   // gives an effect of keeping the help page still
             if (input.length() != 0) { // if invalid input length (non-empty) -> valid
@@ -589,14 +605,20 @@ public class QueryUI {
     // Default menu message
     private static void printMenu() {
         System.out.println("--- Formula 1 'F1' DATA (1950 - 2024) ---\n");
-        System.out.println("Welcome! Selected a numbered option below (1-7) to get started.\n" +
+        System.out.println("Welcome! Selected a numbered option below (1-11) to get started.\n" +
                 "1. Information on Drivers\n" +
                 "2. Information on Constructors\n" +
                 "3. Information on Circuits\n" +
                 "4. Information on Races\n" +
-                "5. General Statistics\n" +
-                "6. Help Menu\n" +
-                "7. Quit application\n\n" +
+                "5. General Statistics\n\n" +
+                "--- ID REFERENCE ---\n" +
+                "6. Print all Driver Information\n" +
+                "7. Print all Constructor Information\n" +
+                "8. Print all Circuit Information\n" +
+                "9. Print all Races Information\n\n" +
+                "--- GENERAL ---\n" +
+                "10. Help Menu\n" +
+                "11. Quit application\n\n" +
                 "[SYSTEM] Note for look-up commands, ensure they are exactly one space apart (for multiple arguments) when keying in or it will be considered invalid!");
     }
 
@@ -641,7 +663,7 @@ public class QueryUI {
 
     // 5) Who had the fastest qualifying time in a particular round
     private static void fastestQualifyingTimeInRound(int raceID) {
-        db.fastestQualInRound();
+        db.fastestQualInRound(raceID);
     }
 
     // 6) Who had the fastest qualifying time in a particular season
@@ -914,7 +936,7 @@ public class QueryUI {
         if (!isValidNumInput(tokens[0]))
             return false; // if it's not a number
         // if a valid num
-        if (Integer.parseInt(tokens[0]) < 1 || Integer.parseInt(tokens[0]) > 7)
+        if (Integer.parseInt(tokens[0]) < 1 || Integer.parseInt(tokens[0]) > 11)
             return false; // out of bounds!
         // valid!
         return result;
@@ -939,7 +961,7 @@ public class QueryUI {
         printDrQueryPageOne(); // print page one first one time
         // while user is not exiting (not entering 'h')
         while (!exit) {
-            System.out.print("> ");
+            System.out.print("db > ");
             String input = sc.nextLine().toLowerCase(); // get user input
             if (isValidDRQInput(input)) { // if valid input go through!
                 switch (input) {
@@ -1178,7 +1200,7 @@ public class QueryUI {
         printConstQueryPageOne(); // print page one first one time
         // while user is not exiting (not entering 'h')
         while (!exit) {
-            System.out.print("> ");
+            System.out.print("db > ");
             String input = sc.nextLine().toLowerCase(); // get user input
             if (isValidCRQInput(input)) { // if valid input go through!
                 switch (input) {
@@ -1330,7 +1352,7 @@ public class QueryUI {
         printCircQueryPageOne(); // print page one first one time
         // while user is not exiting (not entering 'h')
         while (!exit) {
-            System.out.print("> ");
+            System.out.print("db > ");
             String input = sc.nextLine().toLowerCase(); // get user input
             if (isValidCRQInput(input)) { // if valid input go through!
                 switch (input) {
@@ -1471,7 +1493,7 @@ public class QueryUI {
         printRaceQueryPageOne(); // print page one first one time
         // while user is not exiting (not entering 'h')
         while (!exit) {
-            System.out.print("> ");
+            System.out.print("db > ");
             String input = sc.nextLine().toLowerCase(); // get user input
             if (isValidRaceQInput(input)) { // if valid input go through!
                 switch (input) {
@@ -1592,7 +1614,7 @@ public class QueryUI {
         printGenStatQueryPageOne(); // print page one first one time
         // while user is not exiting (not entering 'h')
         while (!exit) {
-            System.out.print("> ");
+            System.out.print("db > ");
             String input = sc.nextLine().toLowerCase(); // get user input
             if (isValidGenStatQInput(input)) { // if valid input go through!
                 switch (input) {

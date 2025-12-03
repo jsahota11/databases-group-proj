@@ -980,7 +980,7 @@ public class Database {
 			ResultSet resultSet = statement.executeQuery(sql);
 
 			while (resultSet.next()) {
-				System.out.println(resultSet.getInt("constructorId") + ": " + resultSet.getString("name") + ", "
+				System.out.println("ID: " + resultSet.getInt("constructorId") + ": " + resultSet.getString("name") + ", "
 						+ resultSet.getString("nationality"));
 			}
 
@@ -1001,7 +1001,7 @@ public class Database {
 			ResultSet resultSet = statement.executeQuery(sql);
 
 			while (resultSet.next()) {
-				System.out.println(resultSet.getInt("raceId") + ": Round " + resultSet.getInt("round") + ", Date: "
+				System.out.println("ID: " + resultSet.getInt("raceId") + ": Round " + resultSet.getInt("round") + ", Date: "
 						+ resultSet.getString("date") + ", Name: " + resultSet.getString("name") + ", Circuit ID: "
 						+ resultSet.getInt("circuitId") + ", Year: " + resultSet.getInt("season"));
 			}
@@ -1024,7 +1024,7 @@ public class Database {
 
 			while (resultSet.next()) {
 				System.out.println(
-						resultSet.getInt("circuitId") + " - Name: " + resultSet.getString("name") + ", Location: "
+						"ID: " + resultSet.getInt("circuitId") + " - Name: " + resultSet.getString("name") + ", Location: "
 								+ resultSet.getString("location") + ", " + resultSet.getString("country") + ", ("
 								+ resultSet.getFloat("lat") + ", " + resultSet.getFloat("lng") + ", "
 								+ resultSet.getFloat("alt") + ")");
@@ -1047,13 +1047,10 @@ public class Database {
 			ResultSet resultSet = statement.executeQuery(sql);
 
 			while (resultSet.next()) {
-				System.out.println(resultSet.getInt("driverId") + " - Name: " + resultSet.getString("firstname") + " "
+				System.out.println("ID: " +resultSet.getInt("driverId") + " - Name: " + resultSet.getString("firstname") + " "
 						+ resultSet.getString("lastname") + ", DOB: " + resultSet.getString("dob") + ","
 						+ resultSet.getString("nationality"));
 			}
-
-			System.out.println();
-
 		} catch (SQLException e) {
 			System.out.println("Something went wrong...");
 			e.printStackTrace();

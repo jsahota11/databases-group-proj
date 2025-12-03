@@ -126,14 +126,9 @@ public class QueryUI {
                     }
                     break;
                 case 3:
-<<<<<<< HEAD
                     System.out.println(
                             "[SYSTEM] To query for 'Oldest/Youngest driver in a season', key in: [older or younger] year\n");
                     System.out.print("> ");
-=======
-                    System.out.println("[SYSTEM] To query for 'Oldest/Youngest driver in a season', key in: year\n");
-                    System.out.print("db > ");
->>>>>>> main
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");

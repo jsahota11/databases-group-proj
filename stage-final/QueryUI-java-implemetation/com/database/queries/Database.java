@@ -1034,7 +1034,7 @@ public class Database {
 			while (resultSet.next()) {
 				System.out.println(resultSet.getInt("raceId") + ": Round " + resultSet.getInt("round") + ", Date: "
 						+ resultSet.getDate("date") + ", Name: " + resultSet.getString("name") + ", Circuit ID: "
-						+ resultSet.getInt("circuitId") + ", Year: " + resultSet.getInt("season"));
+						+ resultSet.getInt("circuitId") + ", Year: " + resultSet.getInt("year"));
 			}
 
 			System.out.println();

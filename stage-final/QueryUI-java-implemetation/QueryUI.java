@@ -21,7 +21,6 @@ public class QueryUI {
 
     // Method to run the main menu
     public static void runMenu() {
-        // declare DB
 
         // Scanner declare
         Scanner sc = new Scanner(System.in);
@@ -111,7 +110,8 @@ public class QueryUI {
                     }
                     break;
                 case 3:
-                    System.out.println("[SYSTEM] To query for 'Oldest/Youngest driver in a season', key in: year\n");
+                    System.out.println(
+                            "[SYSTEM] To query for 'Oldest/Youngest driver in a season', key in: [older or younger] year\n");
                     System.out.print("> ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
@@ -629,9 +629,11 @@ public class QueryUI {
     // input but i dont think thats necessary We could consider getting
     // oldest/youngest across ALL seasons
     private static void driverAgeInSeason(String preference, int seasonYear) {
-        // TODO: implement SQL query
-        // if older : do older query
-        // else : do younger query
+        if (preference.toLowerCase().equals("older")) {
+            db.oldestDriver(seasonYear);
+        } else {
+            db.youngestDriver(seasonYear);
+        }
     }
 
     // 4) Who won in a season
@@ -641,12 +643,12 @@ public class QueryUI {
 
     // 5) Who had the fastest qualifying time in a particular round
     private static void fastestQualifyingTimeInRound(int raceID) {
-        db.fastestQualInRound();
+        db.fastestQualInRound(raceID);
     }
 
     // 6) Who had the fastest qualifying time in a particular season
     private static void fastestQualifyingInSeason(int seasonYear) {
-        // TODO: implement SQL query
+        db.fastestQualInSeason(seasonYear);
     }
 
     /* --- DRIVER (INDIVIDUAL) SPECIFIC --- */
@@ -657,58 +659,57 @@ public class QueryUI {
     // This is median but wed just change the aggregation to MODE (this could be an
     // option for the user)
     private static void avgDriverGridPos(int driverID) {
-        // TODO: implement SQL query
+        db.averageGridPos(driverID);
     }
 
     // 8) This query will find a driver's position in a specific lap within a
     // certain race.
     private static void driverPosInLapOfRace(int driverID, int raceID, int lapNum) {
-        // TODO: implement SQL query
+        db.positionInstance(driverID, raceID, lapNum);
     }
 
     // 9) How many points did a driver get for a specific round
     private static void driverPtsInRound(int driverID, int raceID) {
-        // TODO: implement SQL query
+        db.roundPtsDriver(raceID, driverID);
     }
 
     // 10) How many championships did a driver participate in
     private static void driverNumChampionships(int driverID) {
-        // TODO: implement SQL query
+        db.driverChampionshipCount(driverID);
     }
 
     // 11) Given a specific driver, return all the constructors they have been a
     // part of during their career.
     private static void driverConstructorHistory(int driverID) {
-        // TODO: implement SQL query
+        db.driversConstructorList(driverID);
     }
 
     // 12) Given a specific season and driver, return their fastest lap was during
     // that season.
     private static void driverFastestLapInSeason(int driverID, int seasonYear) {
-        // TODO: implement SQL query
+        db.driversFastestSeasonLap(seasonYear, driverID);
     }
 
     // 13) Given a driver, returns all the years they participated in F1.
     private static void driverActiveYrs(int driverID) {
-        // TODO: implement SQL query
+        db.driversActiveYears(driverID);
     }
 
     // 14) Returns the nationality of a given driver. A useful query for the average
     // user to get this information.
     private static void driverNationality(int driverID) {
-        // TODO: implement SQL query
-        System.out.println("TEST driverNationality for driver " + driverID);
+        db.driversNationality(driverID);
     }
 
     // 15) Given a specific driver and season, takes their performance in every race
     // during that season and returns the average lap time.
     private static void driverAvgLapTimeInSeason(int driverID, int seasonYear) {
-        // TODO: implement SQL query
+        db.driversSeasonalLapTimeAvg(driverID, seasonYear);
     }
 
     // 16) Given a driver, returns how many times they have been the champion of F1.
     private static void driverNumWinsDChamp(int driverID) {
-        // TODO: implement SQL query
+        db.driversWinCount(driverID);
     }
 
     // CONSTRUCTOR-RELATED QUERIES
@@ -723,7 +724,7 @@ public class QueryUI {
     // In other words, the constructor in which drivers apart of said constructor
     // completed their laps in the fastest total time.
     private static void leastActiveConstructorInSeason(int seasonYear) {
-        // TODO
+        db.quickestConstructor(seasonYear);
     }
 
     /*
@@ -734,34 +735,34 @@ public class QueryUI {
     // 18) Given a season, find the driver that contributed the most to a given,
     // specific constructor. The metric is points earned across all races.
     private static void highestDriverPtsInSeason(int constructorID, int seasonYear) {
-        // TODO
+        db.driverContributionsPoints(seasonYear, constructorID);
     }
 
     // 19) Similar to above, but the metric is now the amount of races the driver
     // had completed.
     private static void highestDriverRacesInSeason(int constructorID, int seasonYear) {
-        // TODO
+        db.driverContributionsRaces(seasonYear, constructorID);
     }
 
     // 20) How many points did a constructor get for a specific round
     private static void constructorPtsInRound(int constructorID, int raceID) {
-        // TODO
+        db.roundPtsConstructor(raceID, constructorID);
     }
 
     // 21) How many championships did a constructor participate in
     private static void constructorNumChampionships(int constructorID) {
-        // TODO
+        db.constructorChampionshipCount(constructorID);
     }
 
     // 22) Given a constructor, return all the years they participated in F1.
     private static void constructorActiveYrs(int constructorID) {
-        // TODO
+        db.constructorsActiveYears(constructorID);
     }
 
     // 23) Returns the nationality of a given constructor. Similar usefulness to the
     // last query.
     private static void constructorNationality(int constructorID) {
-        // TODO
+        db.constructorsNationality(constructorID);
     }
 
     // RACE-RELATED QUERIES
@@ -774,7 +775,7 @@ public class QueryUI {
     // 24) Given a specific season, counts all the DNFs for each race and returns
     // the one with the highest count.
     private static void raceWithMostDNF(int seasonYear) {
-        // TODO
+        db.seasonsDNFs(seasonYear);
     }
 
     /*
@@ -785,18 +786,18 @@ public class QueryUI {
     // 25) Given some race, count the number of drivers that had participated in
     // that race that had also received a DNF during the race
     private static void numDriverDNFPerRace(int raceID) {
-        // TODO
+        db.racesDNF(raceID);
     }
 
     // 26) Who won this race
     private static void raceWinner(int raceID) {
-        // TODO
+        db.raceWinner(raceID);
     }
 
     // 27) Given a race, return which recorded lap was the fastest (including the
     // driver that drove it and the time it took).
     private static void fastestLapInRace(int raceID) {
-        // TODO
+        db.fastestLapInRace(raceID);
     }
 
     // CIRCUIT-RELATED QUERIES
@@ -810,18 +811,18 @@ public class QueryUI {
     // highest number of races (may be multiple candidates) in their respective
     // seasons
     private static void cirHighestRacePerSeason() {
-        // TODO
+        db.mostFinishedRaces();
     }
 
     // 29) In a given season, for all circuits, count the number of races that have
     // taken place on the circuit and order them by year and count.
     private static void circuitNumRacePerSeason(int seasonYear) {
-        // TODO
+        db.circuitUsage(seasonYear);
     }
 
     // 30) Returns the most used circuit over the course of all of F1.
     private static void mostUsedCircuit() {
-        // TODO
+        db.mostUsedCircuit();
     }
 
     /*
@@ -832,13 +833,31 @@ public class QueryUI {
     // 31) Given a choice of hemishphere, return the circuits that are located
     // within that hemisphere.
     private static void circuitsInHemisphere(String hemisphere) {
-        // TODO
-        // Please see README.md for this! Can hardcode lat/long values
+        int[] bounds = { 0, 0, 0, 0 };
+        if (hemisphere.toLowerCase().equals("north")) {
+            bounds[0] = -999;
+            bounds[1] = 999;
+            bounds[2] = 999;
+        } else if (hemisphere.toLowerCase().equals("south")) {
+            bounds[0] = -999;
+            bounds[1] = 999;
+            bounds[3] = -999;
+        } else if (hemisphere.toLowerCase().equals("east")) {
+            bounds[1] = 999;
+            bounds[2] = 999;
+            bounds[3] = -999;
+        } else {
+            bounds[0] = -999;
+            bounds[2] = 999;
+            bounds[3] = -999;
+        }
+
+        db.hemispheres(bounds);
     }
 
     // 32) What are the coordinates of a circuit
     private static void circuitCoords(int circuitID) {
-        // TODO
+        db.circuitCoords(circuitID);
     }
 
     // GENERAL STAT QUERIES
@@ -848,19 +867,19 @@ public class QueryUI {
     // when racing on circuits native to their country, tend to complete the races
     // in the fastest time.
     private static void fastestNationalityInHomeCircuit() {
-        // TODO
+        db.fastestOnNativeCircuits();
     }
 
     // 34) Given a specific season, compare all drivers' performance in all races
     // during that season and return the fastest lap.
     private static void fastestLapInSeason(int seasonYear) {
-        // TODO
+        db.seasonsFastestLap(seasonYear);
     }
 
     // 35) Given a specific season, takes the performance of all drivers in every
     // race during that season into account and returns the average lap time.
     private static void seasonAvgLapTime(int seasonYear) {
-        // TODO
+        db.seasonalLapTimeAvg(seasonYear);
     }
 
     /*

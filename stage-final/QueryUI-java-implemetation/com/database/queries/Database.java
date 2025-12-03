@@ -159,30 +159,36 @@ public class Database {
 	}
 
 	// What are the circuits found in a specific hemisphere in the globe
-	public void hemispheres(String direction) {
-		// String sql = "select r.name, count(dr.driverId) as dnfCount from races r join
-		// driverRaces dr on r.raceId = dr.raceId where r.raceId = ? and
-		// dr.finalPosition = -1 group by r.raceId, r.name;";
-		//
-		// try {
-		//
-		// PreparedStatement statement = connection.prepareStatement(sql);
-		//
-		// statement.setInt(1, raceId);
-		//
-		// ResultSet resultSet = statement.executeQuery();
-		//
-		// while (resultSet.next()) {
-		// System.out.println(resultSet.getString("name") + ", " +
-		// resultSet.getInt("dnfCount") + " DNFs.");
-		// }
-		//
-		// System.out.println();
-		//
-		// } catch (SQLException e) {
-		// System.out.println("Something went wrong...");
-		// e.printStackTrace();
-		// }
+	public void hemispheres(int[] bounds) {
+		// bounds[0] is left bound
+		// 1 is right bound
+		// 2 is upper bound
+		// 3 is lower bound
+		String sql = "select c.circuitId, c.name, c.location, c.country from circuits c where c.lat between ? and ? and c.lng between ? and ?";
+
+		try {
+
+			PreparedStatement statement = connection.prepareStatement(sql);
+
+			statement.setInt(1, bounds[0]);
+			statement.setInt(2, bounds[1]);
+			statement.setInt(3, bounds[3]);
+			statement.setInt(4, bounds[2]);
+
+			ResultSet resultSet = statement.executeQuery();
+
+			while (resultSet.next()) {
+				System.out.println(resultSet.getInt("circuitId") + ": " +
+						resultSet.getString("name") + ", " + resultSet.getString("location") + ", "
+						+ resultSet.getString("country"));
+			}
+
+			System.out.println();
+
+		} catch (SQLException e) {
+			System.out.println("Something went wrong...");
+			e.printStackTrace();
+		}
 	}
 
 	// average grid position for a driver per season
@@ -214,21 +220,49 @@ public class Database {
 	// might have to
 	// issue is the two order by, there can only be one ocurring after the union
 	// probably have to use aggregates to grab a min on dob
-	public void extremeAgedDrivers(int year) {
-		String sql = "select top (1) d.driverId, d.firstname, d.lastname, d.dob from drivers d join partOf p on d.driverId = p.driverId where p.year = ? order by d.dob union select top (1) d.driverId, d.firstname, d.lastname, d.dob from drivers d join partOf p on d.driverId = p.driverId where p.year = ? order by d.dob desc;";
+	public void youngestDriver(int year) {
+		String sql = "select top (1) d.driverId, d.firstname, d.lastname, d.dob from drivers d join partOf p on d.driverId = p.driverId where p.year = ? order by d.dob;";
 
 		try {
 
 			PreparedStatement statement = connection.prepareStatement(sql);
 
 			statement.setInt(1, year);
-			statement.setInt(2, year);
 
 			ResultSet resultSet = statement.executeQuery();
 
 			while (resultSet.next()) {
 				System.out.println(resultSet.getInt("driverId") + ": " + resultSet.getString("firstname") + " "
-						+ resultSet.getString("lastname") + ", " + resultSet.getString("dob"));
+						+ resultSet.getString("lastname") + ", " + resultSet.getDate("dob"));
+			}
+
+			System.out.println();
+
+		} catch (SQLException e) {
+			System.out.println("Something went wrong...");
+			e.printStackTrace();
+		}
+	}
+
+	// oldest and youngest drivers in a given season
+	// figure out how to make this work, dont want to use two separate queries but
+	// might have to
+	// issue is the two order by, there can only be one ocurring after the union
+	// probably have to use aggregates to grab a min on dob
+	public void oldestDriver(int year) {
+		String sql = "select top (1) d.driverId, d.firstname, d.lastname, d.dob from drivers d join partOf p on d.driverId = p.driverId where p.year = ? order by d.dob desc;";
+
+		try {
+
+			PreparedStatement statement = connection.prepareStatement(sql);
+
+			statement.setInt(1, year);
+
+			ResultSet resultSet = statement.executeQuery();
+
+			while (resultSet.next()) {
+				System.out.println(resultSet.getInt("driverId") + ": " + resultSet.getString("firstname") + " "
+						+ resultSet.getString("lastname") + ", " + resultSet.getDate("dob"));
 			}
 
 			System.out.println();
@@ -253,11 +287,15 @@ public class Database {
 
 			ResultSet resultSet = statement.executeQuery();
 
-			while (resultSet.next()) {
-				System.out.println(resultSet.getInt("driverId") + ": " + resultSet.getString("firstname") + " "
-						+ resultSet.getString("lastname") + ", " + resultSet.getInt("totalPoints"));
-			}
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println("That constructor was not active during that year.");
+			} else {
+				while (resultSet.next()) {
+					System.out.println(resultSet.getInt("driverId") + ": " + resultSet.getString("firstname") + " "
+							+ resultSet.getString("lastname") + ", " + resultSet.getInt("totalPoints"));
+				}
 
+			}
 			System.out.println();
 
 		} catch (SQLException e) {
@@ -280,9 +318,13 @@ public class Database {
 
 			ResultSet resultSet = statement.executeQuery();
 
-			while (resultSet.next()) {
-				System.out.println(resultSet.getInt("driverId") + ": " + resultSet.getString("firstname") + " "
-						+ resultSet.getString("lastname") + ", " + resultSet.getInt("raceCount"));
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println("That constructor was not active during that season.");
+			} else {
+				while (resultSet.next()) {
+					System.out.println(resultSet.getInt("driverId") + ": " + resultSet.getString("firstname") + " "
+							+ resultSet.getString("lastname") + ", " + resultSet.getInt("raceCount"));
+				}
 			}
 
 			System.out.println();
@@ -296,62 +338,52 @@ public class Database {
 	// which constructor spent the least amount of time driving in a given season
 	// need to figure out an easy way to sum lap times since they are STRINGS
 	public void quickestConstructor(int year) {
-		// String sql = "select top (1) s.year, c.name, sum(l.time) as totalTime from
-		// seasons s join races r on r.year = s.year join laps l on l.raceId = r.raceId
-		// join drivers d on d.driverId = l.driverId join partOf p on p.driverId =
-		// d.driverId and p.year = s.year join constructor c on p.constructorId =
-		// c.constructorId where s.year = ? group by s.year, c.name order by
-		// totalTime;";
-		//
-		// try {
-		//
-		// PreparedStatement statement = connection.prepareStatement(sql);
-		//
-		// statement.setInt(1, year);
-		//
-		// ResultSet resultSet = statement.executeQuery();
-		//
-		// while (resultSet.next()) {
-		// System.out.println(resultSet.getInt("year") + ": " +
-		// resultSet.getString("name") + " "
-		// + resultSet.getString("lastname") + ", " + resultSet.getInt("raceCount"));
-		// }
-		//
-		// System.out.println();
-		//
-		// } catch (SQLException e) {
-		// System.out.println("Something went wrong...");
-		// e.printStackTrace();
-		// }
+		String sql = "select top (1) s.year, c.name, dateadd(millisecond, sum(datediff(millisecond, 0, time)),0) as totalTime from seasons s join races r on r.year = s.year join laps l on l.raceId = r.raceId	join drivers d on d.driverId = l.driverId join partOf p on p.driverId =	d.driverId and p.year = s.year join constructors c on p.constructorId =	c.constructorId where s.year = ? group by s.year, c.name order by totalTime;";
+
+		try {
+
+			PreparedStatement statement = connection.prepareStatement(sql);
+
+			statement.setInt(1, year);
+
+			ResultSet resultSet = statement.executeQuery();
+
+			while (resultSet.next()) {
+				System.out.println(resultSet.getInt("year") + ": " +
+						resultSet.getString("name") + " spent " + resultSet.getTime("totalTime") + " time driving.");
+			}
+
+			System.out.println();
+
+		} catch (SQLException e) {
+			System.out.println("Something went wrong...");
+			e.printStackTrace();
+		}
 	}
 
 	// which nationality drove the fastest average lap on circuits native to their
 	// country
 	// figure out how to make the lap times numbers since we need to average NOOO
 	public void fastestOnNativeCircuits() {
-		// String sql = "with nativeLaps as ( select d.nationality, l.lapTime, from )";
-		//
-		// try {
-		//
-		// Statement statement = connection.createStatement();
-		//
-		// ResultSet resultSet = statement.executeQuery(sql);
-		//
-		// while (resultSet.next()) {
-		// System.out.println(resultSet.getInt("year") + ", " +
-		// resultSet.getInt("circuitId") + ": "
-		// + resultSet.getString("name") + " | " + resultSet.getString("location") + ",
-		// "
-		// + resultSet.getString("country") + ", " + resultSet.getInt("raceCount") + "
-		// finishes.");
-		// }
-		//
-		// System.out.println();
-		//
-		// } catch (SQLException e) {
-		// System.out.println("Something went wrong...");
-		// e.printStackTrace();
-		// }
+		String sql = "with nativeLaps as ( select d.nationality, loc.country, l.time from laps l join drivers d on d.driverId = l.driverId join races r on r.raceId = l.raceId join circuits c on c.circuitId = r.circuitId join locale loc on d.nationality = loc.nationality and c.country = loc.country) select top (1) nationality, country, dateadd(millisecond, avg(datediff(millisecond, 0, time)), 0) as avgTime from nativeLaps group by nationality, country order by avgTime;";
+
+		try {
+
+			Statement statement = connection.createStatement();
+
+			ResultSet resultSet = statement.executeQuery(sql);
+
+			while (resultSet.next()) {
+				System.out.println(resultSet.getString("nationality") + " drivers average a lap time of "
+						+ resultSet.getTime("avgTime") + " on circuits in " + resultSet.getString("country") + ".");
+			}
+
+			System.out.println();
+
+		} catch (SQLException e) {
+			System.out.println("Something went wrong...");
+			e.printStackTrace();
+		}
 	}
 
 	// what position was a driver in during a specific lap of a specific race
@@ -520,20 +552,21 @@ public class Database {
 	}
 
 	// how many championships did a driver participate in
-	public void driverChampionshipCount() {
-		String sql = "select d.driverId, d.firstname, d.lastname, count(distinct r.year) as seasonCount from driverRaces dr join drivers d on d.driverId = dr.driverId join races r on r.raceId = dr.raceId group by d.driverId, d.firstname, d.lastname;";
+	public void driverChampionshipCount(int driverId) {
+		String sql = "select d.firstname, d.lastname, count(distinct r.year) as seasonCount from driverRaces dr join drivers d on d.driverId = dr.driverId join races r on r.raceId = dr.raceId where d.driverId = ? group by d.firstname, d.lastname;";
 
 		try {
 
-			Statement statement = connection.createStatement();
+			PreparedStatement statement = connection.prepareStatement(sql);
 
-			ResultSet resultSet = statement.executeQuery(sql);
+			statement.setInt(1, driverId);
+			ResultSet resultSet = statement.executeQuery();
 
 			while (resultSet.next()) {
 				System.out.println(
-						resultSet.getInt("driverId") + ": " + resultSet.getString("firstname") + " "
+						resultSet.getInt(resultSet.getString("firstname") + " "
 								+ resultSet.getString("lastname") + ", " + resultSet.getInt("seasonCount")
-								+ " championships.");
+								+ " championships."));
 			}
 
 			System.out.println();
@@ -545,20 +578,21 @@ public class Database {
 	}
 
 	// how many championships did a constructor participate in
-	public void constructorChampionshipCount() {
-		String sql = "select c.constructorId, c.name, count(distinct r.year) as seasonCount from constructorRaces cr join constructors c on c.constructorId = cr.constructorId join races r on r.raceId = cr.raceId group by c.constructorId, c.name;";
+	public void constructorChampionshipCount(int constructorId) {
+		String sql = "select c.name, count(distinct r.year) as seasonCount from constructorRaces cr join constructors c on c.constructorId = cr.constructorId join races r on r.raceId = cr.raceId where c.constructorId = ? group by c.name;";
 
 		try {
 
-			Statement statement = connection.createStatement();
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.setInt(1, constructorId);
 
-			ResultSet resultSet = statement.executeQuery(sql);
+			ResultSet resultSet = statement.executeQuery();
 
 			while (resultSet.next()) {
 				System.out.println(
-						resultSet.getInt("constructorId") + ": " + resultSet.getString("name") + ", "
+						resultSet.getString("name") + ", "
 								+ resultSet.getInt("seasonCount")
-								+ " championships.");
+								+ " championship(s).");
 			}
 
 			System.out.println();
@@ -587,7 +621,7 @@ public class Database {
 				System.out.println(
 						resultSet.getInt("driverId") + ": " + resultSet.getString("firstname") + " "
 								+ resultSet.getString("lastname") + ", Race " + resultSet.getInt("raceId") + ": "
-								+ resultSet.getString("qualTime"));
+								+ resultSet.getTime("qualTime"));
 			}
 
 			System.out.println();
@@ -599,39 +633,36 @@ public class Database {
 	}
 
 	// who had the fastest qualifying time in a particular season
-	public void fastestQualInSeason() {
-		// String sql = "select top (1) d.driverId, d.firstname, d.lastname, dr.raceId,
-		// dr.qual1 as qualTime from driverRaces dr join drivers d on d.driverId =
-		// dr.driverId where dr.qual1 is not null union select top (1) d.driverId,
-		// d.firstname, d.lastname, dr.raceId, dr.qual2 as qualTime from driverRaces dr
-		// join drivers d on d.driverId = dr.driverId where dr.qual2 is not null union
-		// select top (1) d.driverId, d.firstname, d.lastname, dr.raceId, dr.qual3 as
-		// qualTime from driverRaces dr join drivers d on d.driverId = dr.driverId where
-		// dr.qual3 is not null order by qualTime;";
-		//
-		// try {
-		//
-		// Statement statement = connection.createStatement();
-		//
-		// ResultSet resultSet = statement.executeQuery(sql);
-		//
-		// while (resultSet.next()) {
-		// System.out.println(
-		// resultSet.getInt("driverId") + ": " + resultSet.getString("firstname") + " "
-		// + resultSet.getString("lastname") + ", Race " + resultSet.getInt("raceId") +
-		// ": "
-		// + resultSet.getString("qualTime"));
-		// }
-		//
-		// System.out.println();
-		//
-		// } catch (SQLException e) {
-		// System.out.println("Something went wrong...");
-		// e.printStackTrace();
-		// }
+	public void fastestQualInSeason(int year) {
+		String sql = "select top (1) d.driverId, d.firstname, d.lastname, dr.raceId, dr.qual1 as qualTime from driverRaces dr join drivers d on d.driverId = dr.driverId join races r on r.raceId = dr.raceId where dr.qual1 is not null and r.year = ? union select top (1) d.driverId, d.firstname, d.lastname, dr.raceId, dr.qual2 as qualTime from driverRaces dr join drivers d on d.driverId = dr.driverId join races r on r.raceId = dr.raceId where dr.qual2 is not null and r.year = ? union select top (1) d.driverId, d.firstname, d.lastname, dr.raceId, dr.qual3 as qualTime from driverRaces dr join drivers d on d.driverId = dr.driverId join races r on r.raceId = dr.raceId where dr.qual3 is not null and r.year = ? order by qualTime;";
+
+		try {
+
+			PreparedStatement statement = connection.prepareStatement(sql);
+
+			statement.setInt(1, year);
+			statement.setInt(2, year);
+			statement.setInt(3, year);
+
+			ResultSet resultSet = statement.executeQuery();
+
+			while (resultSet.next()) {
+				System.out.println(
+						resultSet.getInt("driverId") + ": " + resultSet.getString("firstname") + " "
+								+ resultSet.getString("lastname") + ", Race " + resultSet.getInt("raceId") +
+								": "
+								+ resultSet.getString("qualTime"));
+			}
+
+			System.out.println();
+
+		} catch (SQLException e) {
+			System.out.println("Something went wrong...");
+			e.printStackTrace();
+		}
 	}
 
-	// which constructors has a driver been part of
+	// which constructors has a driver been part of;
 	public void driversConstructorList(int driverId) {
 		String sql = "select c.name, p.year from partOf p join drivers d on p.driverId = d.driverId join constructors c on c.constructorId = p.constructorId where p.driverId = ? ";
 
@@ -672,7 +703,7 @@ public class Database {
 				System.out.println(
 						resultSet.getInt("driverId") + ": " + resultSet.getString("firstname") + " "
 								+ resultSet.getString("lastname") + " was in position " + resultSet.getInt("position")
-								+ " when they timed " + resultSet.getString("time") + " on lap "
+								+ " when they timed " + resultSet.getTime("time") + " on lap "
 								+ resultSet.getInt("lapNumber") + " of Race " + resultSet.getInt("raceId") + ": "
 								+ resultSet.getString("name") + ".");
 			}
@@ -700,7 +731,7 @@ public class Database {
 			while (resultSet.next()) {
 				System.out.println("Race ID: " + resultSet.getInt("raceId") + ", Driver ID: "
 						+ resultSet.getInt("driverId") + ", Lap Number: " + resultSet.getInt("lapNumber")
-						+ ", Position: " + resultSet.getInt("position") + ", Time: " + resultSet.getString("time"));
+						+ ", Position: " + resultSet.getInt("position") + ", Time: " + resultSet.getTime("time"));
 			}
 
 			System.out.println();
@@ -725,7 +756,7 @@ public class Database {
 			while (resultSet.next()) {
 				System.out.println("Race ID: " + resultSet.getInt("raceId") + ", Driver ID: "
 						+ resultSet.getInt("driverId") + ", Lap Number: " + resultSet.getInt("lapNumber")
-						+ ", Position: " + resultSet.getInt("position") + ", Time: " + resultSet.getString("time"));
+						+ ", Position: " + resultSet.getInt("position") + ", Time: " + resultSet.getTime("time"));
 			}
 
 			System.out.println();
@@ -854,51 +885,50 @@ public class Database {
 	}
 
 	// average lap time of a driver for a given season
-	public void driversSeasonalLapTimeAvg(int driverId) {
-		// String sql = "select nationality from constructors c where c.constructorId =
-		// ?;";
-		// try {
-		//
-		// PreparedStatement statement = connection.prepareStatement(sql);
-		//
-		// statement.setInt(1, constructorId);
-		//
-		// ResultSet resultSet = statement.executeQuery();
-		//
-		// while (resultSet.next()) {
-		// System.out.println(resultSet.getString("nationality"));
-		// }
-		//
-		// System.out.println();
-		//
-		// } catch (SQLException e) {
-		// System.out.println("Something went wrong...");
-		// e.printStackTrace();
-		// }
+	public void driversSeasonalLapTimeAvg(int driverId, int year) {
+		String sql = "select dateadd(millisecond, avg(datediff(millisecond, 0, l.time)), 0) as avgTime from laps l join races r on r.raceId = l.raceId where r.year = ? and l.driverId = ?;";
+		try {
+
+			PreparedStatement statement = connection.prepareStatement(sql);
+
+			statement.setInt(1, year);
+			statement.setInt(2, driverId);
+
+			ResultSet resultSet = statement.executeQuery();
+
+			while (resultSet.next()) {
+				System.out.println(resultSet.getTime("avgTime"));
+			}
+
+			System.out.println();
+
+		} catch (SQLException e) {
+			System.out.println("Something went wrong...");
+			e.printStackTrace();
+		}
 	}
 
 	// average lap time across all drivers over a season
 	public void seasonalLapTimeAvg(int year) {
-		// String sql = "select nationality from constructors c where c.constructorId =
-		// ?;";
-		// try {
-		//
-		// PreparedStatement statement = connection.prepareStatement(sql);
-		//
-		// statement.setInt(1, constructorId);
-		//
-		// ResultSet resultSet = statement.executeQuery();
-		//
-		// while (resultSet.next()) {
-		// System.out.println(resultSet.getString("nationality"));
-		// }
-		//
-		// System.out.println();
-		//
-		// } catch (SQLException e) {
-		// System.out.println("Something went wrong...");
-		// e.printStackTrace();
-		// }
+		String sql = "select dateadd(millisecond, avg(datediff(millisecond, 0, l.time)), 0) as avgTime from laps l join races r on r.raceId = l.raceId where r.year = ?;";
+		try {
+
+			PreparedStatement statement = connection.prepareStatement(sql);
+
+			statement.setInt(1, year);
+
+			ResultSet resultSet = statement.executeQuery();
+
+			while (resultSet.next()) {
+				System.out.println(resultSet.getTime("avgTime"));
+			}
+
+			System.out.println();
+
+		} catch (SQLException e) {
+			System.out.println("Something went wrong...");
+			e.printStackTrace();
+		}
 	}
 
 	// which race in a given season had the most DNFs
@@ -1002,7 +1032,7 @@ public class Database {
 
 			while (resultSet.next()) {
 				System.out.println(resultSet.getInt("raceId") + ": Round " + resultSet.getInt("round") + ", Date: "
-						+ resultSet.getString("date") + ", Name: " + resultSet.getString("name") + ", Circuit ID: "
+						+ resultSet.getDate("date") + ", Name: " + resultSet.getString("name") + ", Circuit ID: "
 						+ resultSet.getInt("circuitId") + ", Year: " + resultSet.getInt("season"));
 			}
 
@@ -1048,7 +1078,7 @@ public class Database {
 
 			while (resultSet.next()) {
 				System.out.println(resultSet.getInt("driverId") + " - Name: " + resultSet.getString("firstname") + " "
-						+ resultSet.getString("lastname") + ", DOB: " + resultSet.getString("dob") + ","
+						+ resultSet.getString("lastname") + ", DOB: " + resultSet.getDate("dob") + ","
 						+ resultSet.getString("nationality"));
 			}
 

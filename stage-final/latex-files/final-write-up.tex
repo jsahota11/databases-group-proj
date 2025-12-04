@@ -1,36 +1,37 @@
-# Final Report
-
-## Table of Contents
-
-1. [Introduction](#introduction)
-2. [Data](#data)
-3. [Data Model](#data-model)
-4. [Database](#database)
-5. [Interface](#interface)
-6. [Queries](#queries)
-7. [Conclusion](#conclusion)
-8. [Appendix](#appendix)
+\documentclass[]{article}
 
 
-## Introduction
+% Title Page
+\title{F1 Database}
+\author{Kriza del Moro, Ayesha Qadir, Jatinder Sahota}
 
+
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+
+\newpage
+
+\section{Introduction}
 Our group chose to model all data from all the past seasons of Formula 1. There's a lot of potential for analysis, and a well-designed data model will best allow for that. We included as much data as possible to allow for full analysis (or for full access to data for a layperson). Our UI is a lightweight text-based interface. It categorizes all available queries to make the data easily accessible, and takes into account those who are less experienced with CLIs by including a help menu. This report details the process of creating this project, and further explains its features.
 
-## Data
-
+\section{Data}
 Our data was retrieved from the dataset Formula 1 World Championship from Vopani “Rohanrao”, sourced from Kaggle. It contains data on the Formula 1 (F1) World Championship from 1950 to 2024. 
 
 F1 is a world-renowned auto-racing forum, and is widely considered a premier league for circuit racing. The world championships considered in this dataset are entire seasons appearing in any given year. One season comprises a series of 12 races that takes place on distinct circuits across the world, alongside qualifying rounds that precede them. Constructors are the designers and builders of the cars used in races, and each racer belongs to a constructor and races for them throughout each season.
 
 The data consists of tables pertaining to the following:
 
-* races
-* drivers
-* constructors
-* qualifying sessions
-* circuits
-* lap times
-* the championships overall
+\begin{itemize}
+    \item races
+    \item drivers
+    \item constructors
+    \item qualifying sessions
+    \item circuits
+    \item lap times
+    \item the championships overall
+\end{itemize}
 
 These had attributes like identifying information (name, code, nationality, etc.), and times and positions(for qualifying sessions and lap times). Some additional supporting tables are driver standings, constructor standings and (race) results, as well as sprint results. Sprints or sprint races are shorter than circuits and do not require any driver to stop for pit stops. 
 
@@ -43,9 +44,8 @@ Our dataset required quite a bit of cleaning, largely in the form of cutting att
 We also added on table on our own, made from scratch. Locale was created by hand to map nationalities to their countries.
 
 This is the final version of the ER diagram that we created based off of the dataset.
-- insert ER diagram here
 
-## Data Model
+\section{Data Model}
 
 Most of our entities are organized the same way our dataset is. As mentioned above, we picked a dataset that we felt would easily divide into entities, so this is expected. Most of the design decisions were made regarding the relationships between them. 
 
@@ -57,14 +57,14 @@ Despite picking our dataset with future steps in mind, it clearly did not fit in
 
 The last, and more overarching, regret was choosing something all of us were so unfamiliar with. We initially thought it would be a fun learning opportunity because we were all interested in it, but it made communication a bit more difficult than we expected as we were all at different levels of understanding during certain parts of the project. We realized this issue early on, but chose to put more effort into our communication rather than restart our project. Despite the difficulties, we feel it was the right decision.
 
-
-## Database
+\section{Database}
 
 We made a relational database. It is hosted on Uranium, and all our queries are written in Microsoft SQL. They were originally written for SQLite, but had to be re-written a little bit for Uranium. 
 
 As mentioned earlier, the bulk of the data comes from laps. This made populating the database somewhat difficult because it took up quite a bit of memory to do so. Transactions were also made impossible because they simply would not run. In the end, we had to populate the data on laps a little bit at a time (about 50,000 entries at a time) to make it work.
 
-## Interface
+\section{Interface}
+
 Our project has a text interface in the form of a REPL, programmed in Java. It is run directly in the terminal. The user interacts wth the program through text inputs, guided by prompts from the interface. There are many categories of queries/information, with numbered queries in each category. The categories are drivers, constructors, circuits, races, and general statistics (for more overarching queries).
 
 From the home page, the user chooses which category they would like to get information from. For drivers, constructors, circuits, and races (more broadly, for entities), the user needs to get the ID first from the "ID Reference" sectino of the home page, and then pick the respective category. For the queries that would otherwise return large volumes of data, we limit the data returned at once and allow the user to page through it..
@@ -72,42 +72,40 @@ From the home page, the user chooses which category they would like to get infor
 There is a help meny available for guidance if need be. It describes how to use the application, much like in this report. 
 
 Below are screenshots of some pieces of the UI in action. 
+
 - insert screenshots here
 
-## Queries
+\section{Queries}
 
 Below is a list of the most interesting queries we implemented, alongside an explanation of why they are valuable from an analyst's perspective.
 
-### Which driver contributed the most to a specific constructor in a season based on points earned
+\subsection{Which driver contributed the most to a specific constructor in a season based on points earned}
 
 Given a season, find the driver that contributed the most to a given constructor. The metric is points earned across all races. The user will input the year of the season and the ID of the constructor. Names are unique in the dataset.
 
 This helps analysts see which drivers are the best at contributing to specific constructors, and can help make business decisions when signing on new drivers.
 
-### Which driver contributed the most to a specific constructor in a season based on races completed
-
+\subsection{Which driver contributed the most to a specific constructor in a season based on races completed}
 Similar to above, but the metric is now the amount of races the driver had completed.
 
 Same as previous.
 
-### Which nationality drove the fastest average lap on circuits native to their country
-
+\subsection{Which nationality drove the fastest average lap on circuits native to their country}
 Considering all nationalities any driver can be, find the nationality that, when racing on circuits native to their country, tend to complete the races in the fastest time.
 
 Analysts can understand how drivers from different nationalities vary in experience driving on native circuits, and can help provide insights in to better training practices or competitition preparation, as well as circuit selection for future seasons.
 
-### Average lap time over the entirety of a given season
+\subsection{Average lap time over the entirety of a given season}
 Given a specific season, takes the performance of all drivers in every race during that season into account and returns the average lap time. 
 
 Analysts can use this to compare the overall performance of the drivers during a certain season. During a broader analysis, it could be used to help gauge the difficulty of certain tracks and see if different combinations lead to a harder season overall.
 
-### Which race in a give season had the most drivers who did not finish (DNF)
+\subsection{Which race in a give season had the most drivers who did not finish (DNF)}
 Given a specific season, counts all the DNFs for each race and returns the one with the highest count. 
 
 Analysts could gauge the difficulty of a specific circuit, or judge the performance of drivers on the same circuit from year to year. 
 
-
-## Conclusion
+\section{Conclusion}
 
 The complexity and close knit relationships make a relational database a good choice for this dataset. There may be some advantages of other database systems, but those would mostly be in the realm of the simpler queries. For example, a graph based database system might have an easier time determining things like the fastest lap, or most commonly used circuit. However, our more complex queries require the benefits of a relational database to run. A good example is determining which nationality of drivers drove the fastest average lap on circuits native to their country. Such a query requires a relational database, and could not be re-created easily with other database systems. 
 
@@ -115,41 +113,57 @@ There are a lot of things that could be done with this database as a teaching to
 
 This dataset and the database we created for it are robust and have a lot of potential for analysis. We organized the relational model in such a way that optimizes for that analysis. Our queries cover the breadth of the information we gathered from the dataset, and also contain lots of analytical queries that would help in potential correlations and trends among successful drivers and teams. Though we don't believe it would be a great teaching tool for this course, it is a useful and intriguing application for anyone with even a interest in Formula 1.
 
-## Appendix
+\section{Appendix}
 
-### Stage 1
-- All 3 members helped look for and decide on a dataset
-- Ayesha wrote the project timeline
-- Jatinder wrote the summary of dataset, created a Git repository for the project, and submitted all finished work
+\subsection{Stage 1}
+\begin{itemize}
+    \item All 3 members helped look for and decide on a dataset
+    \item Ayesha wrote the project timeline
+    \item Jatinder wrote the summary of dataset, created a Git repository for the project, and submitted all finished work
+\end{itemize}
 
-### Stage 2
-- All 3 members discussed and decided on how to separate the dataset into entities and relationships
-- KC wrote the summary paragraph for the dataset
-- Ayesha drew the ER diagram, and submitted all finished work
+\subsection{Stage 2}
+\begin{itemize}
+    \item All 3 members discussed and decided on how to separate the dataset into entities and relationships
+    \item KC wrote the summary paragraph for the dataset
+    \item Ayesha drew the ER diagram, and submitted all finished work
+\end{itemize}
 
-### Stage 3
-- All 3 members dicussed and decided how to modify the ER diagram based on feedback from earlier stages, and made a bullet-point draft of the group reflection together
-- Ayesha modified the Stage 1 summary of the dataset as needed and updated the timeline
-- Jatinder converted the ER diagram to the relational model, including merging and normalizing
-- KC wrote the group reflection based on the group's bullet-point notes, and submitted all finished work
+\subsection{Stage 3}
+\begin{itemize}
+    \item All 3 members dicussed and decided how to modify the ER diagram based on feedback from earlier stages, and made a bullet-point draft of the group reflection together
+    \item Ayesha modified the Stage 1 summary of the dataset as needed and updated the timeline
+    \item Jatinder converted the ER diagram to the relational model, including merging and normalizing
+    \item KC wrote the group reflection based on the group's bullet-point notes, and submitted all finished work
+\end{itemize}
 
-### Stage 4
-- All 3 members brainstormed and decided on queries together, and discussed how to implement feedback from earlier stages
-- Jatinder submitted the finalized list of queries
+\subsection{Stage 4}
+\begin{itemize}
+    \item All 3 members brainstormed and decided on queries together, and discussed how to implement feedback from earlier stages
+    \item Jatinder submitted the finalized list of queries
+\end{itemize}
 
-### Stage 5
-- All 3 members discussed how to implement Stage 4 feedback, and implemented approximately 1/3 of the group's queries along with writing descriptions for them
-- Ayesha submitted final copies of everything (though due to some issues with Git, one member's work did not get submitted)
+\subsection{Stage 5}
+\begin{itemize}
+    \item All 3 members discussed how to implement Stage 4 feedback, and implemented approximately 1/3 of the group's queries along with writing descriptions for them
+    \item Ayesha submitted final copies of everything (though due to some issues with Git, one member's work did not get submitted)
+\end{itemize}
 
-### Stage 6
-- All 3 members discussed and decided on UI design, and made a bullet-point draft of the group reflection together
-- Ayesha wrote out the group reflection and the UI description, and created the diagrams for the UI
-- Jatinder updated the group timeline 
-- KC cleaned all the data in preparation for the final stage, and submitted all finished work
+\subsection{Stage 6}
+\begin{itemize}
+    \item All 3 members discussed and decided on UI design, and made a bullet-point draft of the group reflection together
+    \item Ayesha wrote out the group reflection and the UI description, and created the diagrams for the UI
+    \item Jatinder updated the group timeline 
+    \item KC cleaned all the data in preparation for the final stage, and submitted all finished work
+\end{itemize}
 
-### Final Stage
-- All 3 members continually discussed and decided on minor changes and implementation details, made a bullet-point draft of the group reflection together, and rehearsed for the final demonstration together
-- Ayesha wrote the final write-up and final reflection based on the group's bullet-point notes
-- KC implemented the frontend/UI in Java, including creating scaffolding for the backend to be connected
-- Jatinder set up the database on Uranium, implemented all queries to work on Uranium and connect to the frontend, connected the front- and backend, and submitted all finished work
+\subsection{Final Stage}
+\begin{itemize}
+    \item All 3 members continually discussed and decided on minor changes and implementation details, made a bullet-point draft of the group reflection together, and rehearsed for the final demonstration together
+    \item Ayesha wrote the final write-up and final reflection based on the group's bullet-point notes
+    \item KC implemented the frontend/UI in Java, including creating scaffolding for the backend to be connected
+    \item Jatinder set up the database on Uranium, implemented all queries to work on Uranium and connect to the frontend, connected the front- and backend, and submitted all finished work
+\end{itemize}
+
+\end{document}
 

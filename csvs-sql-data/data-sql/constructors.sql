@@ -1,12 +1,5 @@
 BEGIN TRANSACTION;
-DROP TABLE IF EXISTS "constructors";
-CREATE TABLE "constructors" (
-	"constructorId"	INTEGER,
-	"name"	TEXT,
-	"nationality"	TEXT,
-	PRIMARY KEY("constructorId"),
-	FOREIGN KEY("nationality") REFERENCES "locale"("nationality")
-);
+CREATE TABLE "constructors" ("constructorId"	INTEGER,"name"	VARCHAR(200),"nationality"	VARCHAR(100),PRIMARY KEY("constructorId"),FOREIGN KEY("nationality") REFERENCES "locale"("nationality"));
 INSERT INTO "constructors" ("constructorId","name","nationality") VALUES (1,'McLaren','British');
 INSERT INTO "constructors" ("constructorId","name","nationality") VALUES (2,'BMW Sauber','German');
 INSERT INTO "constructors" ("constructorId","name","nationality") VALUES (3,'Williams','British');

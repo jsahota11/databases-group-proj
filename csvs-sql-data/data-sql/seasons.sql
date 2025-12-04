@@ -1,9 +1,5 @@
 BEGIN TRANSACTION;
-DROP TABLE IF EXISTS "seasons";
-CREATE TABLE "seasons" (
-	"year"	INTEGER,
-	PRIMARY KEY("year")
-);
+CREATE TABLE "seasons" ("year"	INTEGER,PRIMARY KEY("year"));
 INSERT INTO "seasons" ("year") VALUES (1950);
 INSERT INTO "seasons" ("year") VALUES (1951);
 INSERT INTO "seasons" ("year") VALUES (1952);

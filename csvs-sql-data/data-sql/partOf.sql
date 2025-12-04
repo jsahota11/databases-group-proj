@@ -1,14 +1,5 @@
 BEGIN TRANSACTION;
-DROP TABLE IF EXISTS "partOf";
-CREATE TABLE "partOf" (
-	"driverId"	INTEGER,
-	"constructorId"	INTEGER,
-	"year"	INTEGER,
-	PRIMARY KEY("driverId","constructorId","year"),
-	FOREIGN KEY("constructorId") REFERENCES "constructors"("constructorId"),
-	FOREIGN KEY("driverId") REFERENCES "drivers"("driverId"),
-	FOREIGN KEY("year") REFERENCES "seasons"("year")
-);
+CREATE TABLE "partOf" ("driverId"	INTEGER,"constructorId"	INTEGER,"year"	INTEGER,PRIMARY KEY("driverId","constructorId","year"),FOREIGN KEY("constructorId") REFERENCES "constructors"("constructorId"),FOREIGN KEY("driverId") REFERENCES "drivers"("driverId"),FOREIGN KEY("year") REFERENCES "seasons"("year"));
 INSERT INTO "partOf" ("driverId","constructorId","year") VALUES (1,1,2007);
 INSERT INTO "partOf" ("driverId","constructorId","year") VALUES (1,1,2008);
 INSERT INTO "partOf" ("driverId","constructorId","year") VALUES (1,1,2009);

@@ -1,16 +1,5 @@
 BEGIN TRANSACTION;
-DROP TABLE IF EXISTS "circuits";
-CREATE TABLE "circuits" (
-	"circuitId"	INTEGER,
-	"name"	TEXT,
-	"location"	TEXT,
-	"country"	TEXT,
-	"lat"	REAL,
-	"lng"	REAL,
-	"alt"	REAL,
-	PRIMARY KEY("circuitId"),
-	FOREIGN KEY("country") REFERENCES "locale"("country")
-);
+CREATE TABLE "circuits" ("circuitId" INTEGER, "name" VARCHAR(200), "location" VARCHAR(200), "country" VARCHAR(100), "lat"	REAL, "lng" REAL, "alt" REAL, PRIMARY KEY("circuitId"), FOREIGN KEY("country") REFERENCES "locale"("country"))
 INSERT INTO "circuits" ("circuitId","name","location","country","lat","lng","alt") VALUES (1,'Albert Park Grand Prix Circuit','Melbourne','Australia',-37.849701,144.968,10.0);
 INSERT INTO "circuits" ("circuitId","name","location","country","lat","lng","alt") VALUES (2,'Sepang International Circuit','Kuala Lumpur','Malaysia',2.7608299,101.738,18.0);
 INSERT INTO "circuits" ("circuitId","name","location","country","lat","lng","alt") VALUES (3,'Bahrain International Circuit','Sakhir','Bahrain',26.032499,50.510601,7.0);

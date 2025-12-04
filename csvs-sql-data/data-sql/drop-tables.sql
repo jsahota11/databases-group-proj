@@ -1,0 +1,14 @@
+BEGIN TRANSACTION;
+DROP TABLE IF EXISTS "constructorRaces";
+DROP TABLE IF EXISTS "constructorChampionships";
+DROP TABLE IF EXISTS "driverRaces";
+DROP TABLE IF EXISTS "driverChampionships";
+DROP TABLE IF EXISTS "partOf";
+DROP TABLE IF EXISTS "laps";
+DROP TABLE IF EXISTS "races";
+DROP TABLE IF EXISTS "drivers";
+DROP TABLE IF EXISTS "constructors";
+DROP TABLE IF EXISTS "circuits";
+DROP TABLE IF EXISTS "locale";
+DROP TABLE IF EXISTS "seasons";
+COMMIT;

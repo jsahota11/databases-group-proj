@@ -1,16 +1,5 @@
 BEGIN TRANSACTION;
-DROP TABLE IF EXISTS "races";
-CREATE TABLE "races" (
-	"raceId"	INTEGER,
-	"year"	INTEGER,
-	"round"	INTEGER,
-	"circuitId"	INTEGER,
-	"name"	TEXT,
-	"date"	TEXT,
-	PRIMARY KEY("raceId"),
-	FOREIGN KEY("circuitId") REFERENCES "circuits"("circuitId"),
-	FOREIGN KEY("year") REFERENCES "seasons"("year")
-);
+CREATE TABLE "races" ("raceId"	INTEGER,"year"	INTEGER,"round"	INTEGER,"circuitId"	INTEGER,"name"	VARCHAR(200),"date"	DATE,PRIMARY KEY("raceId"),FOREIGN KEY("circuitId") REFERENCES "circuits"("circuitId"),FOREIGN KEY("year") REFERENCES "seasons"("year"));
 INSERT INTO "races" ("raceId","year","round","circuitId","name","date") VALUES (1,2009,1,1,'Australian Grand Prix','2009-03-29');
 INSERT INTO "races" ("raceId","year","round","circuitId","name","date") VALUES (2,2009,2,2,'Malaysian Grand Prix','2009-04-05');
 INSERT INTO "races" ("raceId","year","round","circuitId","name","date") VALUES (3,2009,3,17,'Chinese Grand Prix','2009-04-19');

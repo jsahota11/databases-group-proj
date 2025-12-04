@@ -70,6 +70,8 @@ public class QueryUI {
                         System.out.println("[SYSTEM] Quitting application. . .");
                         exit = true;
                         break;
+                    case 12:
+                        db.resetServer();
                     default:
                         break;
                 }
@@ -955,7 +957,7 @@ public class QueryUI {
         if (!isValidNumInput(tokens[0]))
             return false; // if it's not a number
         // if a valid num
-        if (Integer.parseInt(tokens[0]) < 1 || Integer.parseInt(tokens[0]) > 11)
+        if (Integer.parseInt(tokens[0]) < 1 || Integer.parseInt(tokens[0]) > 12)
             return false; // out of bounds!
         // valid!
         return result;

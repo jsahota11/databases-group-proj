@@ -1,11 +1,5 @@
 BEGIN TRANSACTION;
-DROP TABLE IF EXISTS "locale";
-CREATE TABLE "locale" (
-	"lid"	INTEGER,
-	"country"	TEXT UNIQUE,
-	"nationality"	TEXT UNIQUE,
-	PRIMARY KEY("lid")
-);
+CREATE TABLE "locale" ("lid"	INTEGER,"country"	VARCHAR(100) UNIQUE,"nationality"	VARCHAR(100) UNIQUE,PRIMARY KEY("lid"));
 INSERT INTO "locale" ("lid","country","nationality") VALUES (1,'Argentina','Argentinian');
 INSERT INTO "locale" ("lid","country","nationality") VALUES (2,'Australia','Australian');
 INSERT INTO "locale" ("lid","country","nationality") VALUES (3,'Austria','Austrian');

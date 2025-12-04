@@ -1,13 +1,5 @@
 BEGIN TRANSACTION;
-DROP TABLE IF EXISTS "constructorChampionships";
-CREATE TABLE "constructorChampionships" (
-	"constructorId"	INTEGER,
-	"year"	INTEGER,
-	"winner"	INTEGER,
-	PRIMARY KEY("constructorId","year"),
-	FOREIGN KEY("constructorId") REFERENCES "constructors"("constructorId"),
-	FOREIGN KEY("year") REFERENCES "seasons"("year")
-);
+CREATE TABLE "constructorChampionships" ("constructorId"	INTEGER,"year"	INTEGER,"winner"	INTEGER,PRIMARY KEY("constructorId","year"),FOREIGN KEY("constructorId") REFERENCES "constructors"("constructorId"),FOREIGN KEY("year") REFERENCES "seasons"("year"));
 INSERT INTO "constructorChampionships" ("constructorId","year","winner") VALUES (1,1968,0);
 INSERT INTO "constructorChampionships" ("constructorId","year","winner") VALUES (1,1971,0);
 INSERT INTO "constructorChampionships" ("constructorId","year","winner") VALUES (1,1972,1);

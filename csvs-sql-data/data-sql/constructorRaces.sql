@@ -1,13 +1,5 @@
 BEGIN TRANSACTION;
-DROP TABLE IF EXISTS "constructorRaces";
-CREATE TABLE "constructorRaces" (
-	"raceId"	INTEGER,
-	"constructorId"	INTEGER,
-	"points"	INTEGER,
-	PRIMARY KEY("raceId","constructorId"),
-	FOREIGN KEY("constructorId") REFERENCES "constructors"("constructorId"),
-	FOREIGN KEY("raceId") REFERENCES "races"("raceId")
-);
+CREATE TABLE "constructorRaces" ("raceId"	INTEGER,"constructorId"	INTEGER,"points"	INTEGER,PRIMARY KEY("raceId","constructorId"),FOREIGN KEY("constructorId") REFERENCES "constructors"("constructorId"),FOREIGN KEY("raceId") REFERENCES "races"("raceId"));
 INSERT INTO "constructorRaces" ("raceId","constructorId","points") VALUES (1,1,0);
 INSERT INTO "constructorRaces" ("raceId","constructorId","points") VALUES (1,2,0);
 INSERT INTO "constructorRaces" ("raceId","constructorId","points") VALUES (1,3,3);

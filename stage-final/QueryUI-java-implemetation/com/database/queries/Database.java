@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 import java.sql.PreparedStatement;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -1386,6 +1387,36 @@ public class Database {
 		} catch (SQLException e) {
 			System.out.println("Something went wrong...");
 			e.printStackTrace();
+		}
+	}
+
+	// delete everything on the server and repopulate
+	// testing this is the most frightening thing ever
+	public void resetServer() {
+		String makeRelative = "../../csvs-sql-data/data-sql/";
+		Scanner sc = null;
+		File[] files = { new File(makeRelative + "drop-tables.sql"), new File(makeRelative + "seasons.sql"),
+				new File(makeRelative + "locale.sql"),
+				new File(makeRelative + "circuits.sql"), new File(makeRelative + "drivers.sql"),
+				new File(makeRelative + "constructors.sql"), new File(makeRelative + "races.sql"),
+				new File(makeRelative + "laps.sql"), new File(makeRelative + "partOf.sql"),
+				new File(makeRelative + "driverRaces.sql"), new File(makeRelative + "driverChampionships.sql"),
+				new File(makeRelative + "constructorRaces.sql"),
+				new File(makeRelative + "constructorChampionships.sql") };
+
+		for (File file : files) {
+
+			try {
+				sc = new Scanner(file);
+				while (sc.hasNextLine()) {
+					String sql = sc.nextLine().trim();
+					System.out.println(sql);
+					connection.createStatement().execute(sql);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 		}
 	}
 

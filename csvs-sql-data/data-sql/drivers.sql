@@ -1,14 +1,5 @@
 BEGIN TRANSACTION;
-DROP TABLE IF EXISTS "drivers";
-CREATE TABLE "drivers" (
-	"driverId"	INTEGER,
-	"firstname"	TEXT,
-	"lastname"	TEXT,
-	"dob"	TEXT,
-	"nationality"	TEXT,
-	PRIMARY KEY("driverId"),
-	FOREIGN KEY("nationality") REFERENCES "locale"("nationality")
-);
+CREATE TABLE "drivers" ("driverId"	INTEGER,"firstname"	VARCHAR(200),"lastname"	VARCHAR(200),"dob"	DATE,"nationality"	VARCHAR(100),PRIMARY KEY("driverId"),FOREIGN KEY("nationality") REFERENCES "locale"("nationality"));
 INSERT INTO "drivers" ("driverId","firstname","lastname","dob","nationality") VALUES (1,'Lewis','Hamilton','1985-01-07','British');
 INSERT INTO "drivers" ("driverId","firstname","lastname","dob","nationality") VALUES (2,'Nick','Heidfeld','1977-05-10','German');
 INSERT INTO "drivers" ("driverId","firstname","lastname","dob","nationality") VALUES (3,'Nico','Rosberg','1985-06-27','German');

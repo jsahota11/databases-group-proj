@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 import java.sql.PreparedStatement;
 
+import java.lang.StringBuilder;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileNotFoundException;
@@ -1302,92 +1303,117 @@ public class Database {
 		}
 	}
 
-	public void allConstructors() {
+	// iterate through each record, parse into a csv
+	// concatenate everything on @
+	// split string on @
+	public String[] allConstructors() {
 		String sql = "select * from constructors;";
+		String[] records = null;
+
 		try {
 
 			Statement statement = connection.createStatement();
 
 			ResultSet resultSet = statement.executeQuery(sql);
 
-			while (resultSet.next()) {
-				System.out
-						.println("ID: " + resultSet.getInt("constructorId") + ": " + resultSet.getString("name") + ", "
-								+ resultSet.getString("nationality"));
-			}
+			StringBuilder data = new StringBuilder();
 
-			System.out.println();
+			while (resultSet.next()) {
+				data.append(resultSet.getInt("constructorId") + "," + resultSet.getString("name") + ","
+						+ resultSet.getString("nationality") + "@");
+			}
+			data.deleteCharAt(data.length() - 1);
+			records = data.toString().split("@");
 
 		} catch (SQLException e) {
 			System.out.println("Something went wrong...");
 			e.printStackTrace();
 		}
+
+		return records;
 	}
 
-	public void allRaces() {
+	public String[] allRaces() {
 		String sql = "select * from races;";
+		String[] records = null;
 		try {
 
 			Statement statement = connection.createStatement();
 
 			ResultSet resultSet = statement.executeQuery(sql);
+			StringBuilder data = new StringBuilder();
 
 			while (resultSet.next()) {
-				System.out.println(resultSet.getInt("raceId") + ": Round " + resultSet.getInt("round") + ", Date: "
-						+ resultSet.getDate("date") + ", Name: " + resultSet.getString("name") + ", Circuit ID: "
-						+ resultSet.getInt("circuitId") + ", Year: " + resultSet.getInt("year"));
+				data.append(resultSet.getInt("raceId") + "," + resultSet.getInt("round") + ","
+						+ resultSet.getDate("date") + "," + resultSet.getString("name") + ","
+						+ resultSet.getInt("circuitId") + "," + resultSet.getInt("year") + "@");
 			}
 
-			System.out.println();
+			data.deleteCharAt(data.length() - 1);
+			records = data.toString().split("@");
 
 		} catch (SQLException e) {
 			System.out.println("Something went wrong...");
 			e.printStackTrace();
 		}
+
+		return records;
 	}
 
-	public void allCircuits() {
+	public String[] allCircuits() {
 		String sql = "select * from circuits;";
+
+		String[] records = null;
 		try {
 
 			Statement statement = connection.createStatement();
 
 			ResultSet resultSet = statement.executeQuery(sql);
 
-			while (resultSet.next()) {
-				System.out.println(
-						"ID: " + resultSet.getInt("circuitId") + " - Name: " + resultSet.getString("name")
-								+ ", Location: "
-								+ resultSet.getString("location") + ", " + resultSet.getString("country") + ", ("
-								+ resultSet.getFloat("lat") + ", " + resultSet.getFloat("lng") + ", "
-								+ resultSet.getFloat("alt") + ")");
-			}
+			StringBuilder data = new StringBuilder();
 
-			System.out.println();
+			while (resultSet.next()) {
+				data.append(resultSet.getInt("circuitId") + "," + resultSet.getString("name") + ","
+						+ resultSet.getString("location") + "," + resultSet.getString("country") + ","
+						+ resultSet.getFloat("lat") + "," + resultSet.getFloat("lng") + "," + resultSet.getFloat("alt")
+						+ "@");
+			}
+			data.deleteCharAt(data.length() - 1);
+			records = data.toString().split("@");
 
 		} catch (SQLException e) {
 			System.out.println("Something went wrong...");
 			e.printStackTrace();
 		}
+
+		return records;
 	}
 
-	public void allDrivers() {
+	public String[] allDrivers() {
 		String sql = "select * from drivers;";
+		String[] records = null;
 		try {
 
 			Statement statement = connection.createStatement();
 
 			ResultSet resultSet = statement.executeQuery(sql);
 
+			StringBuilder data = new StringBuilder();
+
 			while (resultSet.next()) {
-				System.out.println(resultSet.getInt("driverId") + " - Name: " + resultSet.getString("firstname") + " "
-						+ resultSet.getString("lastname") + ", DOB: " + resultSet.getDate("dob") + ","
-						+ resultSet.getString("nationality"));
+				data.append(resultSet.getInt("driverId") + "," + resultSet.getString("firstname") + " "
+						+ resultSet.getString("lastname") + "," + resultSet.getDate("dob") + ","
+						+ resultSet.getString("nationality") + "," + "@");
 			}
+			data.deleteCharAt(data.length() - 1);
+			records = data.toString().split("@");
+
 		} catch (SQLException e) {
 			System.out.println("Something went wrong...");
 			e.printStackTrace();
 		}
+
+		return records;
 	}
 
 	// delete everything on the server and repopulate

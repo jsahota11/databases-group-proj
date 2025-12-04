@@ -214,7 +214,7 @@ public class QueryUI {
                     break;
                 case 10:
                     System.out.println(
-                            "[SYSTEM] To query for 'Driver's number of participated championships', key in: year\n");
+                            "[SYSTEM] To query for 'Driver's number of participated championships', key in: driverID\n");
                     System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
@@ -410,20 +410,12 @@ public class QueryUI {
         if (input <= 5 || input >= 1 || input == -1) {
             switch (input) { // diff query cases
                 case 1:
-                    System.out.println("[SYSTEM] Querying for. . . 'Most raced on circuits in F1'\n");
+                    System.out.println("[SYSTEM] Querying for. . . 'Circuits in F1 with the most finishes'\n");
                     cirHighestRacePerSeason();
                     break;
                 case 2:
-                    System.out.println(
-                            "[SYSTEM] To query for 'Total races held in each circuit for a specific season', key in: year\n");
-                    System.out.print("db > ");
-                    String dbCommand = sc.nextLine().strip();
-                    if (validateCircQueryInput(dbCommand, input)) {
-                        String[] tokens = dbCommand.split(" ");
-                        circuitNumRacePerSeason(Integer.parseInt(tokens[0]));
-                    } else {
-                        System.out.println("[ERROR] Invalid command! Going back home...");
-                    }
+                    System.out.println("[SYSTEM] Querying for. . . 'Circuit usages across all seasons'\n");
+                    circuitNumRacePerSeason();
                     break;
                 case 3:
                     System.out.println("[SYSTEM] Querying for. . . 'Most raced on circuit in all of F1'\n");
@@ -433,7 +425,7 @@ public class QueryUI {
                     System.out.println(
                             "[SYSTEM] To query for 'Circuits located in specific hemispheres of the globe', key in: hemisphere <EXPECTED: 'north', 'south', 'east', 'west'>\n");
                     System.out.print("db > ");
-                    dbCommand = sc.nextLine().strip();
+                    String dbCommand = sc.nextLine().strip();
                     if (validateCircQueryInput(dbCommand, input)) {
                         String[] tokens = dbCommand.split(" ");
                         circuitsInHemisphere(tokens[0]);
@@ -485,7 +477,7 @@ public class QueryUI {
                     break;
                 case 2:
                     System.out.println(
-                            "[SYSTEM] To query for 'DNF count of each race in a specific season', key in: year\n");
+                            "[SYSTEM] To query for 'DNF count of some race', key in: raceID\n");
                     System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateRaceQueryInput(dbCommand, input)) {
@@ -840,8 +832,8 @@ public class QueryUI {
 
     // 29) In a given season, for all circuits, count the number of races that have
     // taken place on the circuit and order them by year and count.
-    private static void circuitNumRacePerSeason(int seasonYear) {
-        db.circuitUsage(seasonYear);
+    private static void circuitNumRacePerSeason() {
+        db.circuitUsage();
     }
 
     // 30) Returns the most used circuit over the course of all of F1.
@@ -1450,8 +1442,8 @@ public class QueryUI {
     // Prints page one of query list
     private static void printCircQueryPageOne() {
         System.out.println("--- GENERAL CIRCUIT INFORMATION (1/1) ---");
-        System.out.println("1. Most raced on circuits in F1\n" +
-                "2. Total races held in each circuit for a specific season\n" +
+        System.out.println("1. Circuits in F1 with the most finishes\n" +
+                "2. Number of times each circuit was used across all seasons\n" +
                 "3. Most raced on circuit in all of F1\n\n" +
                 "--- SPECIFIC CIRCUIT INFORMATION ---\n" +
                 "4. Circuits located in specific hemispheres of the globe\n" +

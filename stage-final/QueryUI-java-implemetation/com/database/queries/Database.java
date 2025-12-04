@@ -16,9 +16,6 @@ import java.io.IOException;
 import java.io.BufferedReader;
 import java.util.Scanner;
 
-// TODO:
-// printing pretty
-
 public class Database {
 	private Connection connection;
 
@@ -1302,6 +1299,9 @@ public class Database {
 		}
 	}
 
+	// get one row of the result set
+	// make it into a comma-separated string
+	// then fill an array with that
 	public void allConstructors() {
 		String sql = "select * from constructors;";
 		try {

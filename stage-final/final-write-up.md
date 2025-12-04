@@ -77,27 +77,20 @@ The last, and more overarching, regret was choosing something all of us were so 
 
 
 ## Database
-- A discussion of the database (flavour of SQL, etc.)
 
-Our database is hosted on Uranium, and all our queries are written in Microsoft SQL. They were originally written for SQLite, but had to be re-written for Uranium. 
+We made a relational database. It is hosted on Uranium, and all our queries are written in Microsoft SQL. They were originally written for SQLite, but had to be re-written a little bit for Uranium. 
 
-- genuinely don't know what else to add here
-
+As mentioned earlier, the bulk of the data comes from laps. This made populating the database somewhat difficult because it took up quite a bit of memory to do so. Transactions were also made impossible because they simply would not run. In the end, we had to populate the data on laps a little bit at a time (about 50,000 entries at a time) to make it work.
 
 ## Interface
-Our project has a text interface in the form of a REPL, programmed in Java. It is run directly in the terminal. The user interacts wth the program through text inputs, guided by prompts from the interface. There are many categories of queries/information, with numbered queries in each category. 
+Our project has a text interface in the form of a REPL, programmed in Java. It is run directly in the terminal. The user interacts wth the program through text inputs, guided by prompts from the interface. There are many categories of queries/information, with numbered queries in each category. The categories are drivers, constructors, circuits, races, and general statistics (for more overarching queries).
 
-There is a help meny available for guidance if need be. It contains a list of all the available information and where it can be found, as well as an overview of how to use the program. 
+From the home page, the user chooses which category they would like to get information from. For drivers, constructors, circuits, and races (more broadly, for entities), the user needs to get the ID first from the "ID Reference" sectino of the home page, and then pick the respective category. For the queries that would otherwise return large volumes of data, we limit the data returned at once and allow the user to page through it..
 
-- insert how the user actually works it (the nitty gritty details)
+There is a help meny available for guidance if need be. It describes how to use the application, much like in this report. 
 
 Below are screenshots of some pieces of the UI in action. 
 - insert screenshots here
-
-### some stuff from the stage 6 write-up (to be deleted later)
-
-__Categories__
-For drivers and constructors, you are able to choose a specific driver/constructor by name and view all the available information regarding their performance and career in F1. Since we are not using the primary key here for user's convenience, there is a possibility that multiple results will be returned, in particular for driver statistics and information. The data displayed should be fairly short so there will not be an issue displaying multiple entities, and we will ensure our program is able to do so. There is a similar category for races/rounds. As stated in earlier stages, we use round and race somewhat synonymously since a user would identify a particular race by the season and round (each round has one particular race). The last category is the circuits. The user would input a specific season by year, and a round by a number from 1 to 12, and can then ask for information regarding the race of that specific round. There will be one more category for overarching statistics. This is where a lot of our most interesting queries will be, as they aggregate or calculate results over a broader range (e.g. over a season, over the lifetime of a driver, or over the entirety of F1). Again, inputs will be asked for in a similar fashion to the above category. 
 
 ## Queries
 

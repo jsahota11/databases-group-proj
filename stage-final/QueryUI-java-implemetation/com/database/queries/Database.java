@@ -17,9 +17,6 @@ import java.io.IOException;
 import java.io.BufferedReader;
 import java.util.Scanner;
 
-// TODO:
-// printing pretty
-
 public class Database {
 	private Connection connection;
 
@@ -1318,6 +1315,8 @@ public class Database {
 
 			StringBuilder data = new StringBuilder();
 
+			data.append("Constructor ID,Name,Nationality@");
+
 			while (resultSet.next()) {
 				data.append(resultSet.getInt("constructorId") + "," + resultSet.getString("name") + ","
 						+ resultSet.getString("nationality") + "@");
@@ -1342,6 +1341,8 @@ public class Database {
 
 			ResultSet resultSet = statement.executeQuery(sql);
 			StringBuilder data = new StringBuilder();
+
+			data.append("Race ID,Round,Date,Name,Circuit ID, Season (year)@");
 
 			while (resultSet.next()) {
 				data.append(resultSet.getInt("raceId") + "," + resultSet.getInt("round") + ","
@@ -1372,6 +1373,8 @@ public class Database {
 
 			StringBuilder data = new StringBuilder();
 
+			data.append("Circuit ID,Name,Location,Country,Latitude,Longitude,Altitude@");
+
 			while (resultSet.next()) {
 				data.append(resultSet.getInt("circuitId") + "," + resultSet.getString("name") + ","
 						+ resultSet.getString("location") + "," + resultSet.getString("country") + ","
@@ -1399,6 +1402,7 @@ public class Database {
 			ResultSet resultSet = statement.executeQuery(sql);
 
 			StringBuilder data = new StringBuilder();
+			data.append("Driver ID,Name,DOB,Nationality@");
 
 			while (resultSet.next()) {
 				data.append(resultSet.getInt("driverId") + "," + resultSet.getString("firstname") + " "

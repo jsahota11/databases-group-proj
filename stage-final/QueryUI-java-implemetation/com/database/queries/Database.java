@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 import java.sql.PreparedStatement;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -16,9 +17,7 @@ import java.io.BufferedReader;
 import java.util.Scanner;
 
 // TODO:
-// implement all queries, adjusting syntax as needed
 // printing pretty
-// perhaps some input santizing if bad params are given (out of bounds IDs for example)
 
 public class Database {
 	private Connection connection;
@@ -70,13 +69,22 @@ public class Database {
 			statement.setInt(1, year);
 
 			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println("The season corresponding to that year is not recorded in our data.");
+			} else {
 
-			while (resultSet.next()) {
-				System.out.println("Driver ID: " + resultSet.getInt("driverId") + " | Name: "
-						+ resultSet.getString("firstname") + " "
-						+ resultSet.getString("lastname") + " | Total Points: " + resultSet.getInt("totalPoints"));
+				System.out.printf("%-15s %-30s %-15s%n", "Driver ID", "Name", "Total Points");
+				System.out.println("--------------------------------------------------------------");
+
+				while (resultSet.next()) {
+					System.out.printf(
+							"%-15d %-30s %-15d%n",
+							resultSet.getInt("driverId"),
+							resultSet.getString("firstname") + " " + resultSet.getString("lastname"),
+							resultSet.getInt("totalPoints"));
+				}
+
 			}
-
 			System.out.println();
 
 		} catch (SQLException e) {
@@ -96,10 +104,19 @@ public class Database {
 			statement.setInt(1, year);
 
 			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println("The season corresponding to that year is not recorded in our data.");
+			} else {
 
-			while (resultSet.next()) {
-				System.out.println(resultSet.getString("name") + ", "
-						+ resultSet.getString("raceCount") + " races.");
+				System.out.printf("%-30s %-15s%n", "Name", "Races");
+				System.out.println("-----------------------------------------------");
+
+				while (resultSet.next()) {
+					System.out.printf(
+							"%-30s %-15d%n",
+							resultSet.getString("name"),
+							resultSet.getInt("raceCount"));
+				}
 			}
 
 			System.out.println();
@@ -110,20 +127,31 @@ public class Database {
 		}
 	}
 
-	// how many drivers did not finish some race
-	public void racesDNF(int raceId) {
-		String sql = "select r.name, count(dr.driverId) as dnfCount from races r join driverRaces dr on r.raceId = dr.raceId where r.raceId = ? and dr.finalPosition = -1 group by r.raceId, r.name;";
+	// how many drivers did not finish some race, for all races
+	public void racesDNF(int year) {
+		String sql = "select r.raceId, r.name, count(dr.driverId) as dnfCount from races r join driverRaces dr on r.raceId = dr.raceId where r.year = ? and dr.finalPosition = -1 group by r.name, r.raceId order by dnfCount desc;";
 
 		try {
 
 			PreparedStatement statement = connection.prepareStatement(sql);
 
-			statement.setInt(1, raceId);
+			statement.setInt(1, year);
 
 			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println("The season corresponding to that year is not recorded in our data.");
+			} else {
 
-			while (resultSet.next()) {
-				System.out.println(resultSet.getString("name") + ", " + resultSet.getInt("dnfCount") + " DNFs.");
+				System.out.printf("%-15s %-30s %-10s%n", "Race ID", "Name", "DNFs");
+				System.out.println("-----------------------------------------------------------");
+
+				while (resultSet.next()) {
+					System.out.printf(
+							"%-15d %-30s %-10d%n",
+							resultSet.getInt("raceId"),
+							resultSet.getString("name"),
+							resultSet.getInt("dnfCount"));
+				}
 			}
 
 			System.out.println();
@@ -144,10 +172,21 @@ public class Database {
 
 			ResultSet resultSet = statement.executeQuery(sql);
 
+			System.out.printf(
+					"%-6s %-15s %-30s %-20s %-20s %-10s%n",
+					"Year", "CircuitID", "Name", "Location", "Country", "Finishes");
+			System.out.println("-------------------------------------------------------------------------------"
+					+ "----------------------------------");
+
 			while (resultSet.next()) {
-				System.out.println(resultSet.getInt("year") + ", " + resultSet.getInt("circuitId") + ": "
-						+ resultSet.getString("name") + " | " + resultSet.getString("location") + ", "
-						+ resultSet.getString("country") + ", " + resultSet.getInt("raceCount") + " finishes.");
+				System.out.printf(
+						"%-6d %-15d %-30s %-20s %-20s %-10d%n",
+						resultSet.getInt("year"),
+						resultSet.getInt("circuitId"),
+						resultSet.getString("name"),
+						resultSet.getString("location"),
+						resultSet.getString("country"),
+						resultSet.getInt("raceCount"));
 			}
 
 			System.out.println();
@@ -177,12 +216,18 @@ public class Database {
 
 			ResultSet resultSet = statement.executeQuery();
 
-			while (resultSet.next()) {
-				System.out.println(resultSet.getInt("circuitId") + ": " +
-						resultSet.getString("name") + ", " + resultSet.getString("location") + ", "
-						+ resultSet.getString("country"));
-			}
+			System.out.printf("%-15s %-30s %-20s %-20s%n",
+					"Circuit ID", "Name", "Location", "Country");
+			System.out.println("--------------------------------------------------------------------------");
 
+			while (resultSet.next()) {
+				System.out.printf(
+						"%-15d %-30s %-20s %-20s%n",
+						resultSet.getInt("circuitId"),
+						resultSet.getString("name"),
+						resultSet.getString("location"),
+						resultSet.getString("country"));
+			}
 			System.out.println();
 
 		} catch (SQLException e) {
@@ -202,9 +247,19 @@ public class Database {
 			statement.setInt(1, driverId);
 
 			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println("No driver corresponding to that driver ID is recorded in our data.");
+			} else {
 
-			while (resultSet.next()) {
-				System.out.println(resultSet.getInt("year") + ", " + resultSet.getInt("avgPos"));
+				System.out.printf("%-6s %-12s%n", "Year", "Avg Pos");
+				System.out.println("-----------------------");
+
+				while (resultSet.next()) {
+					System.out.printf(
+							"%-6d %-12d%n",
+							resultSet.getInt("year"),
+							resultSet.getInt("avgPos"));
+				}
 			}
 
 			System.out.println();
@@ -230,10 +285,21 @@ public class Database {
 			statement.setInt(1, year);
 
 			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println("The season corresponding to that year is not recorded in our data.");
+			} else {
 
-			while (resultSet.next()) {
-				System.out.println(resultSet.getInt("driverId") + ": " + resultSet.getString("firstname") + " "
-						+ resultSet.getString("lastname") + ", " + resultSet.getDate("dob"));
+				System.out.printf("%-15s %-30s %-15s%n",
+						"Driver ID", "Name", "DOB");
+				System.out.println("--------------------------------------------------------");
+
+				while (resultSet.next()) {
+					System.out.printf(
+							"%-15d %-30s %-15s%n",
+							resultSet.getInt("driverId"),
+							resultSet.getString("firstname") + " " + resultSet.getString("lastname"),
+							resultSet.getDate("dob"));
+				}
 			}
 
 			System.out.println();
@@ -259,10 +325,20 @@ public class Database {
 			statement.setInt(1, year);
 
 			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println("The season corresponding to that year is not recorded in our data.");
+			} else {
 
-			while (resultSet.next()) {
-				System.out.println(resultSet.getInt("driverId") + ": " + resultSet.getString("firstname") + " "
-						+ resultSet.getString("lastname") + ", " + resultSet.getDate("dob"));
+				System.out.printf("%-15s %-30s %-15s%n", "Driver ID", "Name", "DOB");
+				System.out.println("--------------------------------------------------------");
+
+				while (resultSet.next()) {
+					System.out.printf(
+							"%-15d %-30s %-15s%n",
+							resultSet.getInt("driverId"),
+							resultSet.getString("firstname") + " " + resultSet.getString("lastname"),
+							resultSet.getDate("dob"));
+				}
 			}
 
 			System.out.println();
@@ -288,13 +364,20 @@ public class Database {
 			ResultSet resultSet = statement.executeQuery();
 
 			if (!resultSet.isBeforeFirst()) {
-				System.out.println("That constructor was not active during that year.");
+				System.out.println(
+						"That constructor was not active during that year OR we dont have data for that year OR there is no constructor associated with that ID.");
 			} else {
-				while (resultSet.next()) {
-					System.out.println(resultSet.getInt("driverId") + ": " + resultSet.getString("firstname") + " "
-							+ resultSet.getString("lastname") + ", " + resultSet.getInt("totalPoints"));
-				}
 
+				System.out.printf("%-15s %-30s %-12s%n", "Driver ID", "Name", "Total Points");
+				System.out.println("--------------------------------------------------------");
+
+				while (resultSet.next()) {
+					System.out.printf(
+							"%-15d %-30s %-12d%n",
+							resultSet.getInt("driverId"),
+							resultSet.getString("firstname") + " " + resultSet.getString("lastname"),
+							resultSet.getInt("totalPoints"));
+				}
 			}
 			System.out.println();
 
@@ -319,11 +402,19 @@ public class Database {
 			ResultSet resultSet = statement.executeQuery();
 
 			if (!resultSet.isBeforeFirst()) {
-				System.out.println("That constructor was not active during that season.");
+				System.out.println(
+						"That constructor was not active during that season OR we do not have data for that season OR there is no constructor associated with that ID.");
 			} else {
+
+				System.out.printf("%-15s %-30s %-10s%n", "Driver ID", "Name", "Races");
+				System.out.println("--------------------------------------------------------");
+
 				while (resultSet.next()) {
-					System.out.println(resultSet.getInt("driverId") + ": " + resultSet.getString("firstname") + " "
-							+ resultSet.getString("lastname") + ", " + resultSet.getInt("raceCount"));
+					System.out.printf(
+							"%-15d %-30s %-10d%n",
+							resultSet.getInt("driverId"),
+							resultSet.getString("firstname") + " " + resultSet.getString("lastname"),
+							resultSet.getInt("raceCount"));
 				}
 			}
 
@@ -347,12 +438,21 @@ public class Database {
 			statement.setInt(1, year);
 
 			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println("The season corresponding to that year is not recorded in our data.");
+			} else {
 
-			while (resultSet.next()) {
-				System.out.println(resultSet.getInt("year") + ": " +
-						resultSet.getString("name") + " spent " + resultSet.getTime("totalTime") + " time driving.");
+				System.out.printf("%-6s %-30s %-15s%n", "Year", "Name", "Total Time");
+				System.out.println("--------------------------------------------------------");
+
+				while (resultSet.next()) {
+					System.out.printf(
+							"%-6d %-30s %-15s%n",
+							resultSet.getInt("year"),
+							resultSet.getString("name"),
+							resultSet.getTime("totalTime"));
+				}
 			}
-
 			System.out.println();
 
 		} catch (SQLException e) {
@@ -373,9 +473,15 @@ public class Database {
 
 			ResultSet resultSet = statement.executeQuery(sql);
 
+			System.out.printf("%-15s %-15s %-20s%n", "Nationality", "Avg Lap Time", "Country");
+			System.out.println("------------------------------------------------------------");
+
 			while (resultSet.next()) {
-				System.out.println(resultSet.getString("nationality") + " drivers average a lap time of "
-						+ resultSet.getTime("avgTime") + " on circuits in " + resultSet.getString("country") + ".");
+				System.out.printf(
+						"%-15s %-15s %-20s%n",
+						resultSet.getString("nationality"),
+						resultSet.getTime("avgTime"),
+						resultSet.getString("country"));
 			}
 
 			System.out.println();
@@ -399,9 +505,17 @@ public class Database {
 			statement.setInt(3, number);
 
 			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println(
+						"That driver did not participate in that race OR there is no driver associated with that driver ID OR there is no race associated with that race ID OR that numbered lap is not present in the race.");
+			} else {
 
-			while (resultSet.next()) {
-				System.out.println("Position " + resultSet.getInt("position"));
+				System.out.printf("%-15s%n", "Position");
+				System.out.println("----------");
+
+				while (resultSet.next()) {
+					System.out.printf("%-15d%n", resultSet.getInt("position"));
+				}
 			}
 
 			System.out.println();
@@ -423,10 +537,20 @@ public class Database {
 			statement.setInt(1, year);
 
 			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println("The season corresponding to that year is not recorded in our data.");
+			} else {
 
-			while (resultSet.next()) {
-				System.out.println(resultSet.getInt("driverId") + ": " + resultSet.getString("firstname") + " "
-						+ resultSet.getString("lastname") + ", " + resultSet.getInt("totalPts") + " points.");
+				System.out.printf("%-15s %-30s %-12s%n", "Driver ID", "Name", "Total Points");
+				System.out.println("--------------------------------------------------------");
+
+				while (resultSet.next()) {
+					System.out.printf(
+							"%-15d %-30s %-12d%n",
+							resultSet.getInt("driverId"),
+							resultSet.getString("firstname") + " " + resultSet.getString("lastname"),
+							resultSet.getInt("totalPts"));
+				}
 			}
 
 			System.out.println();
@@ -448,13 +572,22 @@ public class Database {
 			statement.setInt(1, circuitId);
 
 			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println("There is no circuit corresponding to that circuit ID.");
+			} else {
 
-			while (resultSet.next()) {
-				System.out.println(
-						resultSet.getString("name") + ": Latitude = " + resultSet.getFloat("lat") + ", Longitude = "
-								+ resultSet.getFloat("lng") + ", Altitude = " + resultSet.getFloat("alt") + ".");
+				System.out.printf("%-30s %-12s %-12s %-15s%n", "Name", "Latitude", "Longitude", "Altitude");
+				System.out.println("---------------------------------------------------------------");
+
+				while (resultSet.next()) {
+					System.out.printf(
+							"%-30s %-12.6f %-12.6f %-15.2f%n",
+							resultSet.getString("name"),
+							resultSet.getFloat("lat"),
+							resultSet.getFloat("lng"),
+							resultSet.getFloat("alt"));
+				}
 			}
-
 			System.out.println();
 
 		} catch (SQLException e) {
@@ -474,13 +607,20 @@ public class Database {
 			statement.setInt(1, raceId);
 
 			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println("There is no race corresponding to that race ID.");
+			} else {
 
-			while (resultSet.next()) {
-				System.out.println(
-						resultSet.getInt("driverId") + ": " + resultSet.getString("firstname") + " "
-								+ resultSet.getString("lastname"));
+				System.out.printf("%-15s %-30s%n", "Driver ID", "Name");
+				System.out.println("----------------------------------------");
+
+				while (resultSet.next()) {
+					System.out.printf(
+							"%-15d %-30s%n",
+							resultSet.getInt("driverId"),
+							resultSet.getString("firstname") + " " + resultSet.getString("lastname"));
+				}
 			}
-
 			System.out.println();
 
 		} catch (SQLException e) {
@@ -501,14 +641,20 @@ public class Database {
 			statement.setInt(2, driverId);
 
 			ResultSet resultSet = statement.executeQuery();
-
-			if (!resultSet.isBeforeFirst()) { // empty?
-				System.out.println("That driver did not participate in that race.");
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println(
+						"That driver did not participate in that race OR there is no race corresponding to that race ID OR there is no driver corresponding to that driver ID.");
 			} else {
+
+				System.out.printf("%-15s %-30s %-10s%n", "Driver ID", "Name", "Points");
+				System.out.println("-----------------------------------------------");
+
 				while (resultSet.next()) {
-					System.out.println(
-							resultSet.getInt("driverId") + ": " + resultSet.getString("firstname") + " "
-									+ resultSet.getString("lastname") + ", " + resultSet.getInt("points") + " points.");
+					System.out.printf(
+							"%-15d %-30s %-10d%n",
+							resultSet.getInt("driverId"),
+							resultSet.getString("firstname") + " " + resultSet.getString("lastname"),
+							resultSet.getInt("points"));
 				}
 			}
 
@@ -534,12 +680,19 @@ public class Database {
 			ResultSet resultSet = statement.executeQuery();
 
 			if (!resultSet.isBeforeFirst()) { // empty?
-				System.out.println("That constructor did not participate in that race.");
+				System.out.println(
+						"That constructor did not participate in that race OR no race is associated with that race ID OR no constructor is associated with that constructor ID.");
 			} else {
+
+				System.out.printf("%-15s %-30s %-15s%n", "Constructor ID", "Name", "Points");
+				System.out.println("-----------------------------------------------------------");
+
 				while (resultSet.next()) {
-					System.out.println(
-							resultSet.getInt("constructorId") + ": " + resultSet.getString("name") + ", "
-									+ resultSet.getInt("points") + " points.");
+					System.out.printf(
+							"%-15d %-30s %-15d%n",
+							resultSet.getInt("constructorId"),
+							resultSet.getString("name"),
+							resultSet.getInt("points"));
 				}
 			}
 
@@ -561,14 +714,20 @@ public class Database {
 
 			statement.setInt(1, driverId);
 			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println("No driver is associated with that driver ID.");
+			} else {
 
-			while (resultSet.next()) {
-				System.out.println(
-						resultSet.getInt(resultSet.getString("firstname") + " "
-								+ resultSet.getString("lastname") + ", " + resultSet.getInt("seasonCount")
-								+ " championships."));
+				System.out.printf("%-30s %-12s%n", "Name", "Championships");
+				System.out.println("----------------------------------------");
+
+				while (resultSet.next()) {
+					System.out.printf(
+							"%-30s %-12d%n",
+							resultSet.getString("firstname") + " " + resultSet.getString("lastname"),
+							resultSet.getInt("seasonCount"));
+				}
 			}
-
 			System.out.println();
 
 		} catch (SQLException e) {
@@ -587,12 +746,19 @@ public class Database {
 			statement.setInt(1, constructorId);
 
 			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println("No constructor is associated with that constructor ID.");
+			} else {
 
-			while (resultSet.next()) {
-				System.out.println(
-						resultSet.getString("name") + ", "
-								+ resultSet.getInt("seasonCount")
-								+ " championship(s).");
+				System.out.printf("%-30s %-15s%n", "Name", "Championships");
+				System.out.println("--------------------------------------------");
+
+				while (resultSet.next()) {
+					System.out.printf(
+							"%-30s %-15d%n",
+							resultSet.getString("name"),
+							resultSet.getInt("seasonCount"));
+				}
 			}
 
 			System.out.println();
@@ -613,15 +779,24 @@ public class Database {
 
 			statement.setInt(1, raceId);
 			statement.setInt(2, raceId);
-			statement.setInt(2, raceId);
+			statement.setInt(3, raceId);
 
 			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println("No race is associated with that race ID.");
+			} else {
 
-			while (resultSet.next()) {
-				System.out.println(
-						resultSet.getInt("driverId") + ": " + resultSet.getString("firstname") + " "
-								+ resultSet.getString("lastname") + ", Race " + resultSet.getInt("raceId") + ": "
-								+ resultSet.getTime("qualTime"));
+				System.out.printf("%-15s %-30s %-10s %-12s%n", "Driver ID", "Name", "Race ID", "Qual Time");
+				System.out.println("---------------------------------------------------------------");
+
+				while (resultSet.next()) {
+					System.out.printf(
+							"%-15d %-30s %-10d %-12s%n",
+							resultSet.getInt("driverId"),
+							resultSet.getString("firstname") + " " + resultSet.getString("lastname"),
+							resultSet.getInt("raceId"),
+							resultSet.getTime("qualTime"));
+				}
 			}
 
 			System.out.println();
@@ -645,15 +820,22 @@ public class Database {
 			statement.setInt(3, year);
 
 			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println("The season corresponding to that year is not recorded in our data.");
+			} else {
 
-			while (resultSet.next()) {
-				System.out.println(
-						resultSet.getInt("driverId") + ": " + resultSet.getString("firstname") + " "
-								+ resultSet.getString("lastname") + ", Race " + resultSet.getInt("raceId") +
-								": "
-								+ resultSet.getString("qualTime"));
+				System.out.printf("%-15s %-30s %-10s %-12s%n", "Driver ID", "Name", "Race ID", "Qual Time");
+				System.out.println("---------------------------------------------------------------");
+
+				while (resultSet.next()) {
+					System.out.printf(
+							"%-15d %-30s %-10d %-12s%n",
+							resultSet.getInt("driverId"),
+							resultSet.getString("firstname") + " " + resultSet.getString("lastname"),
+							resultSet.getInt("raceId"),
+							resultSet.getString("qualTime"));
+				}
 			}
-
 			System.out.println();
 
 		} catch (SQLException e) {
@@ -673,10 +855,19 @@ public class Database {
 			statement.setInt(1, driverId);
 
 			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println("No driver is associated with that driver ID.");
+			} else {
 
-			while (resultSet.next()) {
-				System.out.println(
-						resultSet.getString("name") + " during " + resultSet.getInt("year") + ".");
+				System.out.printf("%-30s %-6s%n", "Name", "Year");
+				System.out.println("-----------------------------------");
+
+				while (resultSet.next()) {
+					System.out.printf(
+							"%-30s %-6d%n",
+							resultSet.getString("name"),
+							resultSet.getInt("year"));
+				}
 			}
 
 			System.out.println();
@@ -698,14 +889,26 @@ public class Database {
 			statement.setInt(1, raceId);
 
 			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println("No race is associated with that race ID.");
+			} else {
 
-			while (resultSet.next()) {
+				System.out.printf("%-15s %-30s %-12s %-12s %-10s %-8s %-25s%n",
+						"Driver ID", "Name", "Position", "Time", "Lap", "Race ID", "Race Name");
 				System.out.println(
-						resultSet.getInt("driverId") + ": " + resultSet.getString("firstname") + " "
-								+ resultSet.getString("lastname") + " was in position " + resultSet.getInt("position")
-								+ " when they timed " + resultSet.getTime("time") + " on lap "
-								+ resultSet.getInt("lapNumber") + " of Race " + resultSet.getInt("raceId") + ": "
-								+ resultSet.getString("name") + ".");
+						"-----------------------------------------------------------------------------------------------");
+
+				while (resultSet.next()) {
+					System.out.printf(
+							"%-15d %-30s %-12d %-12s %-10d %-8d %-25s%n",
+							resultSet.getInt("driverId"),
+							resultSet.getString("firstname") + " " + resultSet.getString("lastname"),
+							resultSet.getInt("position"),
+							resultSet.getTime("time"),
+							resultSet.getInt("lapNumber"),
+							resultSet.getInt("raceId"),
+							resultSet.getString("name"));
+				}
 			}
 
 			System.out.println();
@@ -727,11 +930,24 @@ public class Database {
 			statement.setInt(2, year);
 
 			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println(
+						"That driver did not participate during that year OR the season corresponding to that year is not recorded in our data OR there is no driver associated with that driver ID.");
+			} else {
 
-			while (resultSet.next()) {
-				System.out.println("Race ID: " + resultSet.getInt("raceId") + ", Driver ID: "
-						+ resultSet.getInt("driverId") + ", Lap Number: " + resultSet.getInt("lapNumber")
-						+ ", Position: " + resultSet.getInt("position") + ", Time: " + resultSet.getTime("time"));
+				System.out.printf("%-12s %-15s %-10s %-10s %-12s%n",
+						"Race ID", "Driver ID", "Lap", "Position", "Time");
+				System.out.println("-------------------------------------------------------------");
+
+				while (resultSet.next()) {
+					System.out.printf(
+							"%-12d %-15d %-10d %-10d %-12s%n",
+							resultSet.getInt("raceId"),
+							resultSet.getInt("driverId"),
+							resultSet.getInt("lapNumber"),
+							resultSet.getInt("position"),
+							resultSet.getTime("time"));
+				}
 			}
 
 			System.out.println();
@@ -752,13 +968,24 @@ public class Database {
 			statement.setInt(1, year);
 
 			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println("The season corresponding to that year is not recorded in our data.");
+			} else {
 
-			while (resultSet.next()) {
-				System.out.println("Race ID: " + resultSet.getInt("raceId") + ", Driver ID: "
-						+ resultSet.getInt("driverId") + ", Lap Number: " + resultSet.getInt("lapNumber")
-						+ ", Position: " + resultSet.getInt("position") + ", Time: " + resultSet.getTime("time"));
+				System.out.printf("%-12s %-15s %-10s %-10s %-12s%n",
+						"Race ID", "Driver ID", "Lap", "Position", "Time");
+				System.out.println("-------------------------------------------------------------");
+
+				while (resultSet.next()) {
+					System.out.printf(
+							"%-12d %-15d %-10d %-10d %-12s%n",
+							resultSet.getInt("raceId"),
+							resultSet.getInt("driverId"),
+							resultSet.getInt("lapNumber"),
+							resultSet.getInt("position"),
+							resultSet.getTime("time"));
+				}
 			}
-
 			System.out.println();
 
 		} catch (SQLException e) {
@@ -777,9 +1004,16 @@ public class Database {
 			statement.setInt(1, driverId);
 
 			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println("There is no driver corresponding to that driver ID.");
+			} else {
 
-			while (resultSet.next()) {
-				System.out.println(resultSet.getInt("year"));
+				System.out.printf("%-6s%n", "Year");
+				System.out.println("------");
+
+				while (resultSet.next()) {
+					System.out.printf("%-6d%n", resultSet.getInt("year"));
+				}
 			}
 
 			System.out.println();
@@ -800,9 +1034,16 @@ public class Database {
 			statement.setInt(1, constructorId);
 
 			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println("There is no constructor corresponding to that constructor ID.");
+			} else {
 
-			while (resultSet.next()) {
-				System.out.println(resultSet.getInt("year"));
+				System.out.printf("%-6s%n", "Year");
+				System.out.println("------");
+
+				while (resultSet.next()) {
+					System.out.printf("%-6d%n", resultSet.getInt("year"));
+				}
 			}
 
 			System.out.println();
@@ -823,11 +1064,21 @@ public class Database {
 
 			ResultSet resultSet = statement.executeQuery(sql);
 
+			System.out.printf("%-15s %-30s %-15s %-15s %-12s %-12s %-10s%n",
+					"Circuit ID", "Name", "Location", "Country", "Latitude", "Longitude", "Altitude");
+			System.out.println(
+					"-------------------------------------------------------------------------------------------");
+
 			while (resultSet.next()) {
-				System.out.println(resultSet.getInt("circuitId") + ": " + resultSet.getString("name") + ", "
-						+ resultSet.getString("location") + ", " + resultSet.getString("country") + ", Latitude = "
-						+ resultSet.getFloat("lat") + ", Longitude = " + resultSet.getFloat("lng") + ", Altitude = "
-						+ resultSet.getFloat("alt"));
+				System.out.printf(
+						"%-15d %-30s %-15s %-15s %-12.6f %-12.6f %-10.2f%n",
+						resultSet.getInt("circuitId"),
+						resultSet.getString("name"),
+						resultSet.getString("location"),
+						resultSet.getString("country"),
+						resultSet.getFloat("lat"),
+						resultSet.getFloat("lng"),
+						resultSet.getFloat("alt"));
 			}
 
 			System.out.println();
@@ -848,9 +1099,16 @@ public class Database {
 			statement.setInt(1, driverId);
 
 			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println("There is no driver corresponding to that driver ID.");
+			} else {
 
-			while (resultSet.next()) {
-				System.out.println(resultSet.getString("nationality"));
+				System.out.printf("%-15s%n", "Nationality");
+				System.out.println("---------------");
+
+				while (resultSet.next()) {
+					System.out.printf("%-15s%n", resultSet.getString("nationality"));
+				}
 			}
 
 			System.out.println();
@@ -871,11 +1129,17 @@ public class Database {
 			statement.setInt(1, constructorId);
 
 			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println("There is no constructor corresponding to that constructor ID.");
+			} else {
 
-			while (resultSet.next()) {
-				System.out.println(resultSet.getString("nationality"));
+				System.out.printf("%-15s%n", "Nationality");
+				System.out.println("---------------");
+
+				while (resultSet.next()) {
+					System.out.printf("%-15s%n", resultSet.getString("nationality"));
+				}
 			}
-
 			System.out.println();
 
 		} catch (SQLException e) {
@@ -895,9 +1159,17 @@ public class Database {
 			statement.setInt(2, driverId);
 
 			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println(
+						"That driver did not participate during that season OR we do not have data relating to that season OR the driver associated with that driver ID does not exist.");
+			} else {
 
-			while (resultSet.next()) {
-				System.out.println(resultSet.getTime("avgTime"));
+				System.out.printf("%-12s%n", "Avg Time");
+				System.out.println("------------");
+
+				while (resultSet.next()) {
+					System.out.printf("%-12s%n", resultSet.getTime("avgTime"));
+				}
 			}
 
 			System.out.println();
@@ -918,9 +1190,16 @@ public class Database {
 			statement.setInt(1, year);
 
 			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println("The season corresponding to that year is not recorded in our data.");
+			} else {
 
-			while (resultSet.next()) {
-				System.out.println(resultSet.getTime("avgTime"));
+				System.out.printf("%-12s%n", "Avg Time");
+				System.out.println("------------");
+
+				while (resultSet.next()) {
+					System.out.printf("%-12s%n", resultSet.getTime("avgTime"));
+				}
 			}
 
 			System.out.println();
@@ -942,9 +1221,20 @@ public class Database {
 
 			ResultSet resultSet = statement.executeQuery();
 
-			while (resultSet.next()) {
-				System.out.println(resultSet.getInt("raceId") + ": " + resultSet.getString("name") + ", "
-						+ resultSet.getInt("fps") + " DNFs.");
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println("The season corresponding to that year is not recorded in our data.");
+			} else {
+
+				System.out.printf("%-12s %-30s %-6s%n", "Race ID", "Name", "DNFs");
+				System.out.println("--------------------------------------------");
+
+				while (resultSet.next()) {
+					System.out.printf(
+							"%-12d %-30s %-6d%n",
+							resultSet.getInt("raceId"),
+							resultSet.getString("name"),
+							resultSet.getInt("fps"));
+				}
 			}
 
 			System.out.println();
@@ -965,11 +1255,17 @@ public class Database {
 			statement.setInt(1, driverId);
 
 			ResultSet resultSet = statement.executeQuery();
+			if (!resultSet.isBeforeFirst()) {
+				System.out.println("There is no driver corresponding to that driver ID.");
+			} else {
 
-			while (resultSet.next()) {
-				System.out.println(resultSet.getInt("wins") + " Driver Championships won.");
+				System.out.printf("%-12s%n", "Wins");
+				System.out.println("--------");
+
+				while (resultSet.next()) {
+					System.out.printf("%-12d%n", resultSet.getInt("wins"));
+				}
 			}
-
 			System.out.println();
 
 		} catch (SQLException e) {
@@ -987,10 +1283,15 @@ public class Database {
 
 			ResultSet resultSet = statement.executeQuery(sql);
 
+			System.out.printf("%-15s %-30s %-12s%n", "Driver ID", "Name", "Active Years");
+			System.out.println("---------------------------------------------------");
+
 			while (resultSet.next()) {
-				System.out.println(resultSet.getInt("driverId") + ": " + resultSet.getString("firstname") + " "
-						+ resultSet.getString("lastname") + " drove competitively in F1 for "
-						+ resultSet.getInt("activeYears") + " years.");
+				System.out.printf(
+						"%-15d %-30s %-12d%n",
+						resultSet.getInt("driverId"),
+						resultSet.getString("firstname") + " " + resultSet.getString("lastname"),
+						resultSet.getInt("activeYears"));
 			}
 
 			System.out.println();
@@ -1086,6 +1387,36 @@ public class Database {
 		} catch (SQLException e) {
 			System.out.println("Something went wrong...");
 			e.printStackTrace();
+		}
+	}
+
+	// delete everything on the server and repopulate
+	// testing this is the most frightening thing ever
+	public void resetServer() {
+		String makeRelative = "../../csvs-sql-data/data-sql/";
+		Scanner sc = null;
+		File[] files = { new File(makeRelative + "drop-tables.sql"), new File(makeRelative + "seasons.sql"),
+				new File(makeRelative + "locale.sql"),
+				new File(makeRelative + "circuits.sql"), new File(makeRelative + "drivers.sql"),
+				new File(makeRelative + "constructors.sql"), new File(makeRelative + "races.sql"),
+				new File(makeRelative + "laps.sql"), new File(makeRelative + "partOf.sql"),
+				new File(makeRelative + "driverRaces.sql"), new File(makeRelative + "driverChampionships.sql"),
+				new File(makeRelative + "constructorRaces.sql"),
+				new File(makeRelative + "constructorChampionships.sql") };
+
+		for (File file : files) {
+
+			try {
+				sc = new Scanner(file);
+				while (sc.hasNextLine()) {
+					String sql = sc.nextLine().trim();
+					System.out.println(sql);
+					connection.createStatement().execute(sql);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 		}
 	}
 

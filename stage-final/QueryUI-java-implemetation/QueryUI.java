@@ -70,6 +70,8 @@ public class QueryUI {
                         System.out.println("[SYSTEM] Quitting application. . .");
                         exit = true;
                         break;
+                    case 12:
+                        db.resetServer();
                     default:
                         break;
                 }
@@ -151,7 +153,7 @@ public class QueryUI {
                     break;
                 case 5:
                     System.out.println(
-                            "[SYSTEM] To query for 'Driver with fastest qualifying time in a round', key in: year\n");
+                            "[SYSTEM] To query for 'Driver with fastest qualifying time in a round', key in: raceID\n");
                     System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
@@ -187,7 +189,7 @@ public class QueryUI {
                     break;
                 case 8:
                     System.out.println(
-                            "[SYSTEM] To query for 'Driver's specific position in specific lap # for a certain race', key in: year\n");
+                            "[SYSTEM] To query for 'Driver's specific position in specific lap # for a certain race', key in: driverID raceID lap#\n");
                     System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
@@ -200,7 +202,7 @@ public class QueryUI {
                     break;
                 case 9:
                     System.out.println(
-                            "[SYSTEM] To query for 'Driver's total points in a specific round', key in: year\n");
+                            "[SYSTEM] To query for 'Driver's total points in a specific round', key in: driverID raceID\n");
                     System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
@@ -483,7 +485,7 @@ public class QueryUI {
                     break;
                 case 2:
                     System.out.println(
-                            "[SYSTEM] To query for 'DNF count of each race in a specific season', key in: raceID\n");
+                            "[SYSTEM] To query for 'DNF count of each race in a specific season', key in: year\n");
                     System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateRaceQueryInput(dbCommand, input)) {
@@ -955,7 +957,7 @@ public class QueryUI {
         if (!isValidNumInput(tokens[0]))
             return false; // if it's not a number
         // if a valid num
-        if (Integer.parseInt(tokens[0]) < 1 || Integer.parseInt(tokens[0]) > 11)
+        if (Integer.parseInt(tokens[0]) < 1 || Integer.parseInt(tokens[0]) > 12)
             return false; // out of bounds!
         // valid!
         return result;

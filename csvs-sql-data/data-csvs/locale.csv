@@ -1,0 +1,53 @@
+lid,country,nationality
+1,Argentina,Argentinian
+2,Australia,Australian
+3,Austria,Austrian
+4,Azerbaijan,NULL
+5,Bahrain,Bahraini
+6,Belgium,Belgian
+7,United States,American
+8,Brazil,Brazilian
+9,Canada,Canadian
+10,Chile,Chilean
+11,China,Chinese
+12,Czech Republic,Czech
+13,Denmark,Danish
+14,East Germany,East German
+15,Finland,Finnish
+16,France,French
+17,Germany,German
+18,Hungary,Hungarian
+19,India,Indian
+20,Indonesia,Indonesian
+21,Italy,Italian
+22,Japan,Japanese
+23,Korea,Korean
+24,Liechtenstein,Liechtensteiner
+25,Malaysia,Malaysian
+26,Mexico,Mexican
+27,Monaco,Monegasque
+28,Morocco,Moroccan
+29,Netherlands,Dutch
+30,New Zealand,New Zealander
+31,Poland,Polish
+32,Portugal,Portuguese
+33,Qatar,Qatari
+34,Rhodesia,Rhodesian
+35,Russia,Russian
+36,Saudi Arabia,Arabic
+37,Singapore,Singapore
+38,South Africa,South African
+39,Spain,Spanish
+40,Sweden,Swedish
+41,Switzerland,Swiss
+42,Thailand,Thai
+43,Turkey,Turkish
+44,UAE,South Asian
+45,UK,British
+47,Uruguay,Uruguayan
+48,Venezuela,Venezuelan
+49,NULL,Irish
+50,American-Italian,American-Italian
+51,Argentine-Italian,Argentine-Italian
+52,Austrian-Italian,Austrian-Italian
+53,Hong Kong,Hong Kong

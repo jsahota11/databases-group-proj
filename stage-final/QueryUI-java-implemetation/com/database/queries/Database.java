@@ -223,7 +223,8 @@ public class Database {
 
 			System.out.printf("%-15s %-40s %-30s %-30s%n",
 					"Circuit ID", "Name", "Location", "Country");
-			System.out.println("------------------------------------------------------------------------------------------------");
+			System.out.println(
+					"------------------------------------------------------------------------------------------------");
 
 			while (resultSet.next()) {
 				System.out.printf(
@@ -280,7 +281,7 @@ public class Database {
 	// might have to
 	// issue is the two order by, there can only be one ocurring after the union
 	// probably have to use aggregates to grab a min on dob
-	public void youngestDriver(int year) {
+	public void oldestDriver(int year) {
 		String sql = "select top (1) d.driverId, d.firstname, d.lastname, d.dob from drivers d join partOf p on d.driverId = p.driverId where p.year = ? order by d.dob;";
 
 		try {
@@ -320,7 +321,7 @@ public class Database {
 	// might have to
 	// issue is the two order by, there can only be one ocurring after the union
 	// probably have to use aggregates to grab a min on dob
-	public void oldestDriver(int year) {
+	public void youngestDriver(int year) {
 		String sql = "select top (1) d.driverId, d.firstname, d.lastname, d.dob from drivers d join partOf p on d.driverId = p.driverId where p.year = ? order by d.dob desc;";
 
 		try {

@@ -92,29 +92,22 @@ public class Database {
 	}
 
 	// how many times each circuit was used in a given year
-	public void circuitUsage(int year) {
-		String sql = "with seasonCounts as ( select c.name, count(r.raceId) as raceCount from races r join circuits c on r.circuitId = c.circuitId where r.year = ? group by c.name) select * from seasonCounts order by raceCount desc;";
+	public void circuitUsage() {
+		String sql = "with seasonCounts as ( select c.name, count(r.raceId) as raceCount from races r join circuits c on r.circuitId = c.circuitId group by c.name) select * from seasonCounts order by raceCount desc;";
 
 		try {
 
-			PreparedStatement statement = connection.prepareStatement(sql);
+			Statement statement = connection.createStatement();
 
-			statement.setInt(1, year);
+			ResultSet resultSet = statement.executeQuery(sql);
+			System.out.printf("%-40s %-15s%n", "Name", "Races");
+			System.out.println("-----------------------------------------------");
 
-			ResultSet resultSet = statement.executeQuery();
-			if (!resultSet.isBeforeFirst()) {
-				System.out.println("The season corresponding to that year is not recorded in our data.");
-			} else {
-
-				System.out.printf("%-30s %-15s%n", "Name", "Races");
-				System.out.println("-----------------------------------------------");
-
-				while (resultSet.next()) {
-					System.out.printf(
-							"%-30s %-15d%n",
-							resultSet.getString("name"),
-							resultSet.getInt("raceCount"));
-				}
+			while (resultSet.next()) {
+				System.out.printf(
+						"%-40s %-15d%n",
+						resultSet.getString("name"),
+						resultSet.getInt("raceCount"));
 			}
 
 			System.out.println();
@@ -125,30 +118,44 @@ public class Database {
 		}
 	}
 
-	// how many drivers did not finish some race, for all races
-	public void racesDNF(int year) {
-		String sql = "select r.raceId, r.name, count(dr.driverId) as dnfCount from races r join driverRaces dr on r.raceId = dr.raceId where r.year = ? and dr.finalPosition = -1 group by r.name, r.raceId order by dnfCount desc;";
+	// how many drivers did not finish some race
+	public void racesDNF(int raceId) {
+		String sql = "with mostDNF as (select r.raceId, r.name, count(dr.driverId) as dnfCount from races r join driverRaces dr on r.raceId = dr.raceId where r.raceId = ? and dr.finalPosition = -1 group by r.name, r.raceId) select d.*, mdnf.* from driverRaces dr join mostDNF mdnf on dr.raceId = mdnf.raceId join drivers d on dr.driverId = d.driverId where dr.finalPosition = -1;";
 
 		try {
 
 			PreparedStatement statement = connection.prepareStatement(sql);
+			PreparedStatement statement2 = connection.prepareStatement(sql);
 
-			statement.setInt(1, year);
+			statement.setInt(1, raceId);
+			statement2.setInt(1, raceId);
 
 			ResultSet resultSet = statement.executeQuery();
+			ResultSet resultSet2 = statement2.executeQuery();
+
 			if (!resultSet.isBeforeFirst()) {
-				System.out.println("The season corresponding to that year is not recorded in our data.");
+				System.out.println("There is no race associated with that race ID.");
 			} else {
 
 				System.out.printf("%-15s %-30s %-10s%n", "Race ID", "Name", "DNFs");
-				System.out.println("-----------------------------------------------------------");
+				System.out.println("--------------------------------------------------------");
 
-				while (resultSet.next()) {
-					System.out.printf(
-							"%-15d %-30s %-10d%n",
-							resultSet.getInt("raceId"),
-							resultSet.getString("name"),
-							resultSet.getInt("dnfCount"));
+				resultSet.next();
+				System.out.printf(
+						"%-15d %-30s %-10d%n",
+						resultSet.getInt("raceId"),
+						resultSet.getString("name"),
+						resultSet.getInt("dnfCount"));
+
+				System.out.println();
+				System.out.println("Drivers that did not finish:\n");
+
+				System.out.printf("%-20s %-20s %-20s %-20s%n ", "Driver ID", "Name", "DOB", "Nationality");
+				System.out.println("-------------------------------------------------------------------------------");
+				while (resultSet2.next()) {
+					System.out.printf("%-20d %-20s %-20s %-20s%n", resultSet2.getInt("driverId"),
+							resultSet2.getString("firstname") + " " + resultSet2.getString("lastname"),
+							resultSet2.getString("dob"), resultSet2.getString("nationality"));
 				}
 			}
 
@@ -162,7 +169,7 @@ public class Database {
 
 	// Find some circuit with the highest number of finished races for each season
 	public void mostFinishedRaces() {
-		String sql = "with circuitCounts as ( select r.year, c.circuitId, c.name, c.country, c.location, count(r.raceId) as raceCount from races r join circuits c on r.circuitId = c.circuitId group by r.year, c.circuitId, c.name, c.country, c.location) select cc.* from circuitCounts cc join (select year, max(raceCount) as maxCount from circuitCounts group by year) x on cc.year = x.year order by cc.year;";
+		String sql = "with circuitCounts as ( select r.year, c.circuitId, c.name, c.country, c.location, count(r.raceId) as raceCount from races r join circuits c on r.circuitId = c.circuitId join driverRaces dr on dr.raceId = r.raceId where dr.finalPosition = -1 group by r.year, c.circuitId, c.name, c.country, c.location), maxCounts as (select year, max(raceCount) as maxCount from circuitCounts group by year) select cc.* from circuitCounts cc join maxCounts mc on cc.year = mc.year and cc.raceCount = mc.maxCount order by cc.year;";
 
 		try {
 

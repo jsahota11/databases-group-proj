@@ -1762,10 +1762,11 @@ public class QueryUI {
         Scanner sc = new Scanner(System.in); // need user input
         boolean exit = false; // assume a default non-exit state
         final int ITEMS_PER_PAGE = 15;
-        int currPage = 1; // default first page
-        int maxPages = (int) Math.ceil((double) data.length / ITEMS_PER_PAGE) - 1; // get max pages based on data arr length
+        int currPage = 0; // default first page
+        int displayPage = currPage + 1;
+        int maxPages = (int) Math.ceil((double) data.length / ITEMS_PER_PAGE); // get max pages based on data arr length
         do {
-            System.out.println("--- " + dataType + " Information (" + currPage + "/" + maxPages + ") ---");
+            System.out.println("--- " + dataType + " Information (" + displayPage + "/" + maxPages + ") ---");
             switch (dataType) {
                 case "Drivers":
                     System.out.printf("%-15s | %-30s | %-15s | %-15s%n", "Driver ID", "Name", "DOB", "Nationality");
@@ -1805,8 +1806,9 @@ public class QueryUI {
             System.out.print("db > ");
             String input = sc.nextLine();
             String cleanStr = input.strip().replaceAll("\\s+", "");
-            if (isValidNumInput(cleanStr) && Integer.parseInt(cleanStr) <= maxPages) {
-                currPage = Integer.parseInt(cleanStr);
+            if (isValidNumInput(cleanStr) && Integer.parseInt(cleanStr) <= maxPages && Integer.parseInt(cleanStr) >= 0) {
+                currPage = Integer.parseInt(cleanStr) - 1;
+                displayPage = currPage + 1;
                 System.out.println();
                 System.out.println();
             }

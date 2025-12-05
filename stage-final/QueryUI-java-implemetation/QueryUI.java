@@ -1734,7 +1734,7 @@ public class QueryUI {
      */
     private static void printHelpMenu() {
         System.out.println("--- HELP MENU ---\n" +
-                "Hello user, we are TEAM VROOM!\n" +
+                "Hello user, we are \u001B[33mTEAM VROOM!\u001B[0m\n" +
                 "We've developed this UI so you can easily search information within the Formula 1 World Championship (1954-2025) database.\n\n" +
                 "Note that for all queries and searches, you may be required to input an ID. In order to know a particular race, driver, etc. ID, you may\n" +
                 "do a look-up through our 'Print all XYZ information' menu options. Thank you and have fun!\n"

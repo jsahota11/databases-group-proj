@@ -221,13 +221,13 @@ public class Database {
 
 			ResultSet resultSet = statement.executeQuery();
 
-			System.out.printf("%-15s %-30s %-20s %-20s%n",
+			System.out.printf("%-15s %-40s %-30s %-30s%n",
 					"Circuit ID", "Name", "Location", "Country");
-			System.out.println("--------------------------------------------------------------------------");
+			System.out.println("------------------------------------------------------------------------------------------------");
 
 			while (resultSet.next()) {
 				System.out.printf(
-						"%-15d %-30s %-20s %-20s%n",
+						"%-15d %-40s %-30s %-30s%n",
 						resultSet.getInt("circuitId"),
 						resultSet.getString("name"),
 						resultSet.getString("location"),
@@ -1072,7 +1072,7 @@ public class Database {
 			System.out.printf("%-15s %-30s %-15s %-15s %-12s %-12s %-10s%n",
 					"Circuit ID", "Name", "Location", "Country", "Latitude", "Longitude", "Altitude");
 			System.out.println(
-					"-------------------------------------------------------------------------------------------");
+					"-----------------------------------------------------------------------------------------------------------------");
 
 			while (resultSet.next()) {
 				System.out.printf(

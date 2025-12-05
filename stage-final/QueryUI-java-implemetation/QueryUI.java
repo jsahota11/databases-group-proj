@@ -48,20 +48,16 @@ public class QueryUI {
                         queryGenStats();
                         break;
                     case 6:
-                        System.out.println("--- DRIVERS INFORMATION ---");
-                        db.allDrivers();
+                        displayPages(db.allDrivers(), "Drivers");
                         break;
                     case 7:
-                        System.out.println("--- CONSTRUCTORS INFORMATION ---");
-                        db.allConstructors();
+                        displayPages(db.allConstructors(), "Constructors");
                         break;
                     case 8:
-                        System.out.println("--- CIRCUITS INFORMATION ---");
-                        db.allCircuits();
+                        displayPages(db.allCircuits(), "Circuits");
                         break;
                     case 9:
-                        System.out.println("--- RACES INFORMATION ---");
-                        db.allRaces();
+                        displayPages(db.allRaces(), "Races");
                         break;
                     case 10:
                         runHelpMenu();
@@ -71,7 +67,8 @@ public class QueryUI {
                         exit = true;
                         break;
                     case 12:
-                        db.resetServer();
+                        // db.resetServer();
+                        System.out.println("[SYSTEM] Commented out for now. . . so KC doesn't accidentally trigger it");
                     default:
                         break;
                 }
@@ -117,7 +114,7 @@ public class QueryUI {
                     break;
                 case 2:
                     System.out.println(
-                            "[SYSTEM] To query for 'Driver who has been active the longest in F1', key in: year\n");
+                            "[SYSTEM] To query for 'Driver who has been active the longest in F1', key in: driverID\n");
                     System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
@@ -177,7 +174,7 @@ public class QueryUI {
                     break;
                 case 7:
                     System.out.println(
-                            "[SYSTEM] To query for 'Driver's average grid position for all seasons', key in: year\n");
+                            "[SYSTEM] To query for 'Driver's average grid position for all seasons', key in: driverID\n");
                     System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
@@ -225,7 +222,7 @@ public class QueryUI {
                     }
                     break;
                 case 11:
-                    System.out.println("[SYSTEM] To query for 'Driver's constructor history', key in: year\n");
+                    System.out.println("[SYSTEM] To query for 'Driver's constructor history', key in: driverID\n");
                     System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
@@ -237,7 +234,7 @@ public class QueryUI {
                     break;
                 case 12:
                     System.out.println(
-                            "[SYSTEM] To query for 'Driver's fastest lap in a specific season', key in: year\n");
+                            "[SYSTEM] To query for 'Driver's fastest lap in a specific season', key in: driverID year\n");
                     System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
@@ -248,7 +245,7 @@ public class QueryUI {
                     }
                     break;
                 case 13:
-                    System.out.println("[SYSTEM] To query for 'Driver's active years in F1', key in: year\n");
+                    System.out.println("[SYSTEM] To query for 'Driver's active years in F1', key in: driverID\n");
                     System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
@@ -259,7 +256,7 @@ public class QueryUI {
                     }
                     break;
                 case 14:
-                    System.out.println("[SYSTEM] To query for 'Driver's nationality', key in: year\n");
+                    System.out.println("[SYSTEM] To query for 'Driver's nationality', key in: driverID\n");
                     System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
@@ -271,7 +268,7 @@ public class QueryUI {
                     break;
                 case 15:
                     System.out.println(
-                            "[SYSTEM] To query for 'Driver's average lap time in a specific season', key in: year\n");
+                            "[SYSTEM] To query for 'Driver's average lap time in a specific season', key in: driverID year\n");
                     System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
@@ -283,7 +280,7 @@ public class QueryUI {
                     break;
                 case 16:
                     System.out.println(
-                            "[SYSTEM] To query for 'Driver's total number of driver championship wins', key in: year\n");
+                            "[SYSTEM] To query for 'Driver's total number of driver championship wins', key in: driverID\n");
                     System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
@@ -612,7 +609,8 @@ public class QueryUI {
                 "9. Print all Races Information\n\n" +
                 "--- GENERAL ---\n" +
                 "10. Help Menu\n" +
-                "11. Quit application\n\n" +
+                "11. Quit application\n" +
+                "12. Repopulate data base \u001B[31m(WARNING!!! This might take 30 MINS ~ 2 HRS)\u001B[0m\n\n" +
                 "[SYSTEM] Note for look-up commands, ensure they are exactly one space apart (for multiple arguments) when keying in or it will be considered invalid!");
     }
 
@@ -913,7 +911,7 @@ public class QueryUI {
      * @param input : passed user input for "specific" entity
      */
     private static void printQueryListHeader(String entity) {
-        System.out.println("[SYSTEM] Great, here are the information we have on " + entity.toUpperCase() + ".\n\n");
+        System.out.println("[SYSTEM] Great, here's the information we have on " + entity.toUpperCase() + ".\n\n");
     }
 
     /**
@@ -1367,7 +1365,7 @@ public class QueryUI {
         while (!exit) {
             System.out.print("db > ");
             String input = sc.nextLine().toLowerCase(); // get user input
-            if (isValidCRQInput(input)) { // if valid input go through!
+            if (isValidCircQInput(input)) { // if valid input go through!
                 switch (input) {
                     case "1":
                         result = 1;
@@ -1409,7 +1407,7 @@ public class QueryUI {
     }
 
     /**
-     * Validate input for constructor query page
+     * Validate input for circuit query page
      * 
      * @param str : takes in string input to validate before going into conditions
      * @return returns a boolean whether it's valid or invalid
@@ -1736,7 +1734,76 @@ public class QueryUI {
      */
     private static void printHelpMenu() {
         System.out.println("--- HELP MENU ---\n" +
-                "1. TBD\n");
+                "Hello user, we are TEAM VROOM!\n" +
+                "We've developed this UI so you can easily search information within the Formula 1 World Championship (1954-2025) database.\n\n" +
+                "Note that for all queries and searches, you may be required to input an ID. In order to know a particular race, driver, etc. ID, you may\n" +
+                "do a look-up through our 'Print all XYZ information' menu options. Thank you and have fun!\n"
+            );
         System.out.println("[SYSTEM] Enter 'h' to go back to the Main Menu");
+    }
+
+    /* Pagination */
+
+    /**
+     * Handle pagination for better visual output
+     */
+    private static void displayPages(String[] data, String dataType) {
+        Scanner sc = new Scanner(System.in); // need user input
+        boolean exit = false; // assume a default non-exit state
+        final int ITEMS_PER_PAGE = 15;
+        int currPage = 1; // default first page
+        int maxPages = (int) Math.ceil((double) data.length / ITEMS_PER_PAGE) - 1; // get max pages based on data arr length
+        do {
+            System.out.println("--- " + dataType + " Information (" + currPage + "/" + maxPages + ") ---");
+            switch (dataType) {
+                case "Drivers":
+                    System.out.printf("%-15s | %-30s | %-15s | %-15s%n", "Driver ID", "Name", "DOB", "Nationality");
+                    System.out.printf("%-15s | %-30s | %-15s | %-15s%n", "----------", "--------------------", "----------", "----------");
+                    break;
+                case "Constructors":
+                    System.out.printf("%-15s | %-30s | %-15s%n", "Constructor ID", "Name", "Nationality");
+                    System.out.printf("%-15s | %-30s | %-15s%n", "----------", "--------------------", "----------");
+                    break;
+                case "Races":
+                    System.out.printf("%-15s | %-15s | %-15s | %-30s | %-12s | %-12s%n", "RaceID", "Round", "Date", "Name", "Circuit ID", "Season/Year");
+                    System.out.printf("%-15s | %-15s | %-15s | %-30s | %-12s | %-12s%n", "----------", "----------", "----------", "--------------------", "--------", "--------");
+                    break;
+                case "Circuits":
+                    System.out.printf("%-15s | %-40s | %-30s | %-15s | %-12s | %-12s | %-12s%n", "Circuit ID", "Name", "Location", "Country", "Latitude", "Longitude", "Altitude");
+                    System.out.printf("%-15s | %-40s | %-30s | %-15s | %-12s | %-12s | %-12s%n", "----------", "--------------------", "--------------------", "----------", "--------", "--------", "--------");
+                    break;
+            }
+            for (int i = currPage * ITEMS_PER_PAGE; i < Math.min(currPage * ITEMS_PER_PAGE + ITEMS_PER_PAGE, data.length); i++) {
+                String[] tokens = data[i].split(",");
+                switch (dataType){ // change format depending on data type
+                case "Drivers":    
+                    System.out.printf("%-15s | %-30s | %-15s | %-15s%n", tokens[0], tokens[1], tokens[2], tokens[3]);
+                    break;
+                case "Constructors":
+                    System.out.printf("%-15s | %-30s | %-15s%n", tokens[0], tokens[1], tokens[2]);
+                    break;
+                case "Races":
+                    System.out.printf("%-15s | %-15s | %-15s | %-30s | %-12s | %-12s%n", tokens[0], tokens[1], tokens[2], tokens[3], tokens [4], tokens[5]);
+                    break;
+                case "Circuits":
+                    System.out.printf("%-15s | %-40s | %-30s | %-15s | %-12s | %-12s | %-12s%n", tokens[0], tokens[1], tokens[2], tokens[3], tokens [4], tokens[5], tokens[6]);
+                    break;
+                }
+            }
+            System.out.println("[SYSTEM] Enter a valid page number between 1 - " + maxPages + " to change between pages or any other key to exit.");
+            System.out.print("db > ");
+            String input = sc.nextLine();
+            String cleanStr = input.strip().replaceAll("\\s+", "");
+            if (isValidNumInput(cleanStr) && Integer.parseInt(cleanStr) <= maxPages) {
+                currPage = Integer.parseInt(cleanStr);
+                System.out.println();
+                System.out.println();
+            }
+            else {
+                exit = true;
+                System.out.println("[SYSTEM] Going back to main menu. . .");
+            }
+
+        } while (!exit);
     }
 }

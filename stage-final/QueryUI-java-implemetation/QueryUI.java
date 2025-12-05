@@ -14,6 +14,9 @@ public class QueryUI {
     // For developer comments: Please see README.md for more information!
 
     static Database db = new Database();
+    final static String BLUE = "\u001b[36m";
+    final static String YELLOW = "\u001b[33m";
+    final static String RESET = "\u001b[0m";
 
     public static void main(String[] args) {
         runMenu();
@@ -113,16 +116,8 @@ public class QueryUI {
                     }
                     break;
                 case 2:
-                    System.out.println(
-                            "[SYSTEM] To query for 'Driver who has been active the longest in F1', key in: driverID\n");
-                    System.out.print("db > ");
-                    dbCommand = sc.nextLine().strip();
-                    if (validateDrQueryInput(dbCommand, input)) {
-                        String[] tokens = dbCommand.split(" ");
-                        longestParticipatingDriver(Integer.parseInt(tokens[0]));
-                    } else {
-                        System.out.println("[ERROR] Invalid command! Going back home...");
-                    }
+                    System.out.println("[SYSTEM] Querying for. . . 'Driver who has been active the longest in F1'\n");
+                    longestParticipatingDriver();
                     break;
                 case 3:
                     System.out.println(
@@ -574,9 +569,9 @@ public class QueryUI {
         // TODO: print help menu
         Scanner sc = new Scanner(System.in); // in case we have multiple pages!
         boolean exit = false; // while user has not exited -- assume default state
-        printHelpMenu();
         // while user has not chosen to exit
         while (!exit) { // clean this up more later
+            printHelpMenu(); // re-print
             System.out.print("db > ");
             String input = sc.nextLine().strip(); // keep asking for input until user chooses to exit
                                                   // gives an effect of keeping the help page still
@@ -587,30 +582,44 @@ public class QueryUI {
                         if (tokens[0].toLowerCase().equals("h")) { // if it's 'h' -> exit
                             exit = true;
                         }
+                        else {
+                            System.out.println("[ERROR] Invalid input! Try again.\n");
+                        }
+                    }
+                    else {
+                        System.out.println("[ERROR] Invalid input! Try again.");
                     }
                 }
+                else {
+                    System.out.println("[ERROR] Invalid input! Try again.");
+                }
+            }
+            else {
+                System.out.println("[ERROR] Invalid input! Try again.");
             }
         }
     }
 
     // Default menu message
     private static void printMenu() {
+        System.out.println("\n\n");
         System.out.println("--- Formula 1 'F1' DATA (1950 - 2024) ---\n");
-        System.out.println("Welcome! Selected a numbered option below (1-11) to get started.\n" +
-                "1. Information on Drivers\n" +
-                "2. Information on Constructors\n" +
-                "3. Information on Circuits\n" +
-                "4. Information on Races\n" +
-                "5. General Statistics\n\n" +
+        System.out.println("Welcome! Selected a numbered option below (1-11) to get started.\n\n" +
+                "--- QUERY INFORMATION ---\n" +
+                BLUE + "1. " + YELLOW + "Information on Drivers\n" +
+                BLUE + "2. " + YELLOW + "Information on Constructors\n" +
+                BLUE + "3. " + YELLOW + "Information on Circuits\n" +
+                BLUE + "4. " + YELLOW + "Information on Races\n" +
+                BLUE + "5. " + YELLOW + "General Statistics\n\n" + RESET +
                 "--- ID REFERENCE ---\n" +
-                "6. Print all Driver Information\n" +
-                "7. Print all Constructor Information\n" +
-                "8. Print all Circuit Information\n" +
-                "9. Print all Races Information\n\n" +
+                BLUE + "6. " + YELLOW + "Print all Driver Information\n" +
+                BLUE + "7. " + YELLOW + "Print all Constructor Information\n" +
+                BLUE + "8. " + YELLOW + "Print all Circuit Information\n" +
+                BLUE + "9. " + YELLOW + "Print all Races Information\n\n" + RESET +
                 "--- GENERAL ---\n" +
-                "10. Help Menu\n" +
-                "11. Quit application\n" +
-                "12. Repopulate data base \u001B[31m(WARNING!!! This might take 30 MINS ~ 2 HRS)\u001B[0m\n\n" +
+                BLUE + "10. " + YELLOW + "Help Menu\n" +
+                BLUE + "11. " + YELLOW + "Quit application\n" +
+                BLUE + "12. " + YELLOW + "Repopulate data base \u001B[31m(WARNING!!! This might take 30 MINS ~ 2 HRS)\u001B[0m\n\n" + RESET +
                 "[SYSTEM] Note for look-up commands, ensure they are exactly one space apart (for multiple arguments) when keying in or it will be considered invalid!");
     }
 
@@ -634,7 +643,7 @@ public class QueryUI {
 
     // 2) Determines the length of the career of each driver that has ever
     // participated in F1, and returns the one with the longest.
-    private static void longestParticipatingDriver(int driverID) {
+    private static void longestParticipatingDriver() {
         db.longestDriverCareer();
     }
 
@@ -1067,12 +1076,13 @@ public class QueryUI {
     // Prints page one of query list -- to reduce cognitive load
     private static void printDrQueryPageOne() {
         System.out.println("--- GENERAL DRIVER INFORMATION (1/2) ---");
-        System.out.println("1. Driver rankings in a season\n" +
-                "2. Driver who has been active the longest in F1\n" +
-                "3. Oldest/Youngest driver in a season\n" +
-                "4. Driver championship winner in a season\n" +
-                "5. Driver with fastest qualifying time in a round\n" +
-                "6. Driver with fastest qualifying time in a season\n\n" +
+        System.out.println(
+                BLUE + "1. " + YELLOW + "Driver rankings in a season\n" +
+                BLUE + "2. " + YELLOW + "Driver who has been active the longest in F1\n" +
+                BLUE + "3. " + YELLOW + "Oldest/Youngest driver in a season\n" +
+                BLUE + "4. " + YELLOW + "Driver championship winner in a season\n" +
+                BLUE + "5. " + YELLOW + "Driver with fastest qualifying time in a round\n" +
+                BLUE + "6. " + YELLOW + "Driver with fastest qualifying time in a season\n\n" + RESET +
                 "[SYSTEM] Enter one of the numbered options above (1-6) to get the information you'd like.\n" +
                 "[SYSTEM] Enter 'p 2' to go to Page 2 or 'h' to go back to the Main Menu.\n");
     }
@@ -1080,16 +1090,17 @@ public class QueryUI {
     // Prints page two of query list
     private static void printDrQueryPageTwo() {
         System.out.println("--- SPECIFIC DRIVER INFORMATION (2/2) ---");
-        System.out.println("7. Driver's average grid position for all seasons\n" +
-                "8. Driver's specific position in specific lap # for a certain race\n" +
-                "9. Driver's total points in a specific round\n" +
-                "10. Driver's number of participated championships\n" +
-                "11. Driver's constructor history\n" +
-                "12. Driver's fastest lap in a specific season\n" +
-                "13. Driver's active years in F1\n" +
-                "14. Driver's nationality\n" +
-                "15. Driver's average lap time in a specific season\n" +
-                "16. Driver's total number of driver championship wins\n\n" +
+        System.out.println(
+                BLUE + "7. " + YELLOW + "Driver's average grid position for all seasons\n" +
+                BLUE + "8. " + YELLOW + "Driver's specific position in specific lap # for a certain race\n" +
+                BLUE + "9. " + YELLOW + "Driver's total points in a specific round\n" +
+                BLUE + "10. " + YELLOW + "Driver's number of participated championships\n" +
+                BLUE + "11. " + YELLOW + "Driver's constructor history\n" +
+                BLUE + "12. " + YELLOW + "Driver's fastest lap in a specific season\n" +
+                BLUE + "13. " + YELLOW + "Driver's active years in F1\n" +
+                BLUE + "14. " + YELLOW + "Driver's nationality\n" +
+                BLUE + "15. " + YELLOW + "Driver's average lap time in a specific season\n" +
+                BLUE + "16. " + YELLOW + "Driver's total number of driver championship wins\n\n" + RESET +
                 "[SYSTEM] Enter one of the numbered options above (7-16) to get the information you'd like.\n" +
                 "[SYSTEM] You may enter 'p 1' to go to Page 1 or 'h' to go back to the Main Menu.\n");
     }
@@ -1296,14 +1307,14 @@ public class QueryUI {
     // Prints page one of query list
     private static void printConstQueryPageOne() {
         System.out.println("--- GENERAL CONSTRUCTOR INFORMATION (1/1) ---");
-        System.out.println("1. Least active constructor in a season\n\n" +
+        System.out.println(BLUE + "1. " + YELLOW + "Least active constructor in a season\n\n" + RESET +
                 "--- SPECIFIC CONSTRUCTOR INFORMATION ---\n" +
-                "2. Driver with the most point contribution in a specific constructor\n" +
-                "3. Driver with the most races in a specific constructor in a specific season\n" +
-                "4. Constructor's total points in a certain round\n" +
-                "5. Constructor's total of participated championships\n" +
-                "6. Constructor's years of activity\n" +
-                "7. Constructor's nationality\n\n" +
+                BLUE + "2. " + YELLOW + "Driver with the most point contribution in a specific constructor\n" +
+                BLUE + "3. " + YELLOW + "Driver with the most races in a specific constructor in a specific season\n" +
+                BLUE + "4. " + YELLOW + "Constructor's total points in a certain round\n" +
+                BLUE + "5. " + YELLOW + "Constructor's total of participated championships\n" +
+                BLUE + "6. " + YELLOW + "Constructor's years of activity\n" +
+                BLUE + "7. " + YELLOW + "Constructor's nationality\n\n" + RESET +
                 "[SYSTEM] Enter one of the numbered options above (1-7) to get the information you'd like or 'h' to go back to the Main Menu.\n");
     }
 
@@ -1440,12 +1451,12 @@ public class QueryUI {
     // Prints page one of query list
     private static void printCircQueryPageOne() {
         System.out.println("--- GENERAL CIRCUIT INFORMATION (1/1) ---");
-        System.out.println("1. Circuits in F1 with the most finishes\n" +
-                "2. Number of times each circuit was used across all seasons\n" +
-                "3. Most raced on circuit in all of F1\n\n" +
+        System.out.println(BLUE + "1. " + YELLOW + "Circuits in F1 with the most finishes\n" +
+                BLUE + "2. " + YELLOW + "Number of times each circuit was used across all seasons\n" +
+                BLUE + "3. " + YELLOW + "Most raced on circuit in all of F1\n\n" + RESET +
                 "--- SPECIFIC CIRCUIT INFORMATION ---\n" +
-                "4. Circuits located in specific hemispheres of the globe\n" +
-                "5. Coordinates of a specific circuit\n\n" +
+                BLUE + "4. " + YELLOW + "Circuits located in specific hemispheres of the globe\n" +
+                BLUE + "5. " + YELLOW + "Coordinates of a specific circuit\n\n" + RESET +
                 "[SYSTEM] Enter one of the numbered options above (1-5) to get the information you'd like or 'h' to go back to the Main Menu.\n");
     }
 
@@ -1577,11 +1588,11 @@ public class QueryUI {
     // Prints page one of query list
     private static void printRaceQueryPageOne() {
         System.out.println("--- GENERAL RACES INFORMATION (1/1) ---");
-        System.out.println("1. Races with the most DNF's (Did Not Finish)\n\n" +
+        System.out.println(BLUE + "1. Races with the most DNF's (Did Not Finish)\n\n" + RESET +
                 "--- SPECIFIC RACE INFORMATION ---\n" +
-                "2. DNF count for some race\n" +
-                "3. Winner of a specific race\n" +
-                "4. Driver with the fastest recorded lap time in a specific race\n\n" +
+                BLUE + "2. " + YELLOW + "DNF count for some race\n" +
+                BLUE + "3. " + YELLOW + "Winner of a specific race\n" +
+                BLUE + "4. " + YELLOW + "Driver with the fastest recorded lap time in a specific race\n\n" + RESET +
                 "[SYSTEM] Enter one of the numbered options above (1-4) to get the information you'd like or 'h' to go back to the Main Menu.\n");
     }
 
@@ -1734,9 +1745,9 @@ public class QueryUI {
      */
     private static void printHelpMenu() {
         System.out.println("--- HELP MENU ---\n" +
-                "Hello user, we are \u001B[33mTEAM VROOM!\u001B[0m\n" +
+                "Hello user, we are \u001b[35mTEAM VROOM!\u001B[0m\n" +
                 "We've developed this UI so you can easily search information within the Formula 1 World Championship (1954-2025) database.\n\n" +
-                "Note that for all queries and searches, you may be required to input an ID. In order to know a particular race, driver, etc. ID, you may\n" +
+                "Note that for all queries and searches, \u001b[3m\u001b[92myou may be required to input an ID\u001B[0m. In order to know a particular race, driver, etc. ID, you may\n" +
                 "do a look-up through our 'Print all XYZ information' menu options. Thank you and have fun!\n"
             );
         System.out.println("[SYSTEM] Enter 'h' to go back to the Main Menu");

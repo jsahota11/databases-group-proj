@@ -1581,7 +1581,7 @@ public class QueryUI {
         System.out.println("--- GENERAL RACES INFORMATION (1/1) ---");
         System.out.println("1. Races with the most DNF's (Did Not Finish)\n\n" +
                 "--- SPECIFIC RACE INFORMATION ---\n" +
-                "2. DNF count of each race in a specific season\n" +
+                "2. DNF count for some race\n" +
                 "3. Winner of a specific race\n" +
                 "4. Driver with the fastest recorded lap time in a specific race\n\n" +
                 "[SYSTEM] Enter one of the numbered options above (1-4) to get the information you'd like or 'h' to go back to the Main Menu.\n");

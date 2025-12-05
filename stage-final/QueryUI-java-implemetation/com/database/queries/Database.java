@@ -171,7 +171,7 @@ public class Database {
 
 	// Find some circuit with the highest number of finished races for each season
 	public void mostFinishedRaces() {
-		String sql = "with circuitCounts as ( select r.year, c.circuitId, c.name, c.country, c.location, count(r.raceId) as raceCount from races r join circuits c on r.circuitId = c.circuitId join driverRaces dr on dr.raceId = r.raceId where dr.finalPosition = -1 group by r.year, c.circuitId, c.name, c.country, c.location) select cc.* from circuitCounts cc join (select year, max(raceCount) as maxCount from circuitCounts group by year) x on cc.year = x.year order by cc.year;";
+		String sql = "with circuitCounts as ( select r.year, c.circuitId, c.name, c.country, c.location, count(r.raceId) as raceCount from races r join circuits c on r.circuitId = c.circuitId join driverRaces dr on dr.raceId = r.raceId where dr.finalPosition = -1 group by r.year, c.circuitId, c.name, c.country, c.location), maxCounts as (select year, max(raceCount) as maxCount from circuitCounts group by year) select cc.* from circuitCounts cc join maxCounts mc on cc.year = mc.year and cc.raceCount = mc.maxCount order by cc.year;";
 
 		try {
 

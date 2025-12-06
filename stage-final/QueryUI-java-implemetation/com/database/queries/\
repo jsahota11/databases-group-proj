@@ -224,7 +224,7 @@ public class Database {
 			System.out.printf("%-15s %-40s %-30s %-30s%n",
 					"Circuit ID", "Name", "Location", "Country");
 			System.out.println(
-					"-----------------------------------------------------------------------------------------------------");
+					"------------------------------------------------------------------------------------------------");
 
 			while (resultSet.next()) {
 				System.out.printf(
@@ -374,14 +374,14 @@ public class Database {
 						"That constructor was not active during that year OR we dont have data for that year OR there is no constructor associated with that ID.");
 			} else {
 
-				System.out.printf("%-14s %-27s %-18s %-25s %-6s%n", "Driver ID", "Driver Name", "Total Points",
+				System.out.printf("%-14s %-27s %-12s %-25s %-6s%n", "Driver ID", "Driver Name", "Total Points",
 						"Constructor Name", "Year");
 				System.out.println(
-						"-----------------------------------------------------------------------------------------------");
+						"------------------------------------------------------------------------------------------");
 
 				while (resultSet.next()) {
 					System.out.printf(
-							"%-14d %-27s %-18d %-25s %-6d%n",
+							"%-14d %-27s %-12d %-25s %-6d%n",
 							resultSet.getInt("driverId"),
 							resultSet.getString("firstname") + " " + resultSet.getString("lastname"),
 							resultSet.getInt("totalPoints"), resultSet.getString("name"), resultSet.getInt("year"));
@@ -398,7 +398,7 @@ public class Database {
 	// given a season and constructor, get the driver that contributed the most to a
 	// constructor by races completed
 	public void driverContributionsRaces(int year, int constructorId) {
-		String sql = "select top (1) d.driverId, d.firstname, d.lastname, count(dr.raceId) as raceCount, r.year, c.name from driverRaces dr join races r on dr.raceId = r.raceId join drivers d on d.driverId = dr.driverId join partOf p on p.driverId = dr.driverId and p.year = r.year join constructors c on p.constructorId = c.constructorId where r.year = ? and p.constructorId = ? group by d.driverId, d.firstname, d.lastname, r.year, c.name order by raceCount desc;";
+		String sql = "select top (1) d.driverId, d.firstname, d.lastname, count(dr.raceId) as raceCount from driverRaces dr join races r on dr.raceId = r.raceId join drivers d on d.driverId = dr.driverId join partOf p on p.driverId = dr.driverId and p.year = r.year where r.year = ? and p.constructorId = ? group by d.driverId, d.firstname, d.lastname order by raceCount desc;";
 
 		try {
 
@@ -414,17 +414,15 @@ public class Database {
 						"That constructor was not active during that season OR we do not have data for that season OR there is no constructor associated with that ID.");
 			} else {
 
-				System.out.printf("%-14s %-27s %-18s %-30s %-6s%n", "Driver ID", "Driver Name", "Races",
-						"Constructor Name", "Year");
-				System.out.println(
-						"----------------------------------------------------------------------------------------------------------------");
+				System.out.printf("%-15s %-30s %-10s%n", "Driver ID", "Name", "Races");
+				System.out.println("--------------------------------------------------------");
 
 				while (resultSet.next()) {
 					System.out.printf(
-							"%-14d %-27s %-18d %-30s %-6d%n",
+							"%-15d %-30s %-10d%n",
 							resultSet.getInt("driverId"),
 							resultSet.getString("firstname") + " " + resultSet.getString("lastname"),
-							resultSet.getInt("raceCount"), resultSet.getString("name"), resultSet.getInt("year"));
+							resultSet.getInt("raceCount"));
 				}
 			}
 
@@ -506,7 +504,7 @@ public class Database {
 
 	// what position was a driver in during a specific lap of a specific race
 	public void positionInstance(int driverId, int raceId, int number) {
-		String sql = "select d.*, r.*, l.* from laps l join races r on r.raceId = l.raceId join drivers d on d.driverId = l.driverId where d.driverId = ? and r.raceId = ? and l.lapNumber = ?;";
+		String sql = "select d.*, r.*, position from laps l join races r on r.raceId = l.raceId join driverRaces dr on dr.raceId = r.raceId join drivers d on d.driverId = dr.driverId where d.driverId = ? and r.raceId = ? and l.lapNumber = ?;";
 
 		try {
 
@@ -522,12 +520,11 @@ public class Database {
 						"That driver did not participate in that race OR there is no driver associated with that driver ID OR there is no race associated with that race ID OR that numbered lap is not present in the race.");
 			} else {
 
-				System.out.printf("%-25s %-30s %-15s %-15s%n", "Driver Name", "Race Name", "Position", "Lap Number");
-				System.out.println(
-						"-------------------------------------------------------------------------------------");
+				System.out.printf("%-15s %-15s %-15s %-15s%n", "Driver Name", "Race Name", "Position", "Lap Number");
+				System.out.println("----------");
 
 				while (resultSet.next()) {
-					System.out.printf("%-25s %-30s %-15d %-15d%n",
+					System.out.printf("%-15s %-15s %-15d %-15d%n",
 							resultSet.getString("firstname") + " " + resultSet.getString("lastname"),
 							resultSet.getString("name"), resultSet.getInt("position"), resultSet.getInt("lapNumber"));
 				}
@@ -592,11 +589,11 @@ public class Database {
 			} else {
 
 				System.out.printf("%-35s %-12s %-12s %-15s%n", "Name", "Latitude", "Longitude", "Altitude");
-				System.out.println("--------------------------------------------------------------------------");
+				System.out.println("-----------------------------------------------------------------------");
 
 				while (resultSet.next()) {
 					System.out.printf(
-							"%-35s %-12.3f %-12.3f %-15.3f%n",
+							"%-35s %-12f %-12f %-15f%n",
 							resultSet.getString("name"),
 							resultSet.getFloat("lat"),
 							resultSet.getFloat("lng"),
@@ -661,10 +658,9 @@ public class Database {
 						"That driver did not participate in that race OR there is no race corresponding to that race ID OR there is no driver corresponding to that driver ID.");
 			} else {
 
-				System.out.printf("%-19s %-30s %-10s %-25s %-10s%n", "Driver ID", "Driver Name", "Race ID", "Race Name",
+				System.out.printf("%-19s %-30s %-10s %-25s %-10s", "Driver ID", "Driver Name", "Race ID", "Race Name",
 						"Points");
-				System.out.println(
-						"------------------------------------------------------------------------------------------------");
+				System.out.println("----------------------------------------------------------");
 
 				while (resultSet.next()) {
 					System.out.printf(
@@ -702,12 +698,12 @@ public class Database {
 						"That constructor did not participate in that race OR no race is associated with that race ID OR no constructor is associated with that constructor ID.");
 			} else {
 
-				System.out.printf("%-19s %-30s %-15s%n", "Constructor ID", "Name", "Points");
+				System.out.printf("%-15s %-30s %-15s%n", "Constructor ID", "Name", "Points");
 				System.out.println("-----------------------------------------------------------");
 
 				while (resultSet.next()) {
 					System.out.printf(
-							"%-19d %-30s %-15d%n",
+							"%-15d %-30s %-15d%n",
 							resultSet.getInt("constructorId"),
 							resultSet.getString("name"),
 							resultSet.getInt("points"));
@@ -737,7 +733,7 @@ public class Database {
 			} else {
 
 				System.out.printf("%-30s %-12s%n", "Name", "Championships");
-				System.out.println("----------------------------------------------");
+				System.out.println("----------------------------------------");
 
 				while (resultSet.next()) {
 					System.out.printf(
@@ -778,18 +774,16 @@ public class Database {
 							resultSet.getInt("seasonCount"));
 				}
 
-				System.out.println();
-
 				PreparedStatement secondStatement = connection.prepareStatement(
-						"select distinct r.year as raceYear from races r join constructorRaces cr on r.raceId = cr.raceId where cr.constructorId = ?");
+						"select distinct cr.year from constructorRaces cr where cr.constructorId = ?");
 
 				secondStatement.setInt(1, constructorId);
 
-				ResultSet resultSet2 = secondStatement.executeQuery();
+				ResultSet resultSet2 = statement.executeQuery();
 				System.out.println("Season");
-				System.out.println("----------");
+				System.err.println("----------");
 				while (resultSet2.next()) {
-					System.out.println(resultSet2.getInt("raceYear"));
+					System.out.println(resultSet2.getInt("year"));
 				}
 			}
 
@@ -928,7 +922,7 @@ public class Database {
 				System.out.printf("%-12s %-25s %-12s %-12s %-10s %-12s %-25s%n",
 						"Driver ID", "Name", "Position", "Time", "Lap", "Race ID", "Race Name");
 				System.out.println(
-						"-------------------------------------------------------------------------------------------------------------------");
+						"---------------------------------------------------------------------------------------------------------");
 
 				while (resultSet.next()) {
 					System.out.printf(
@@ -1103,7 +1097,7 @@ public class Database {
 
 			while (resultSet.next()) {
 				System.out.printf(
-						"%-15d %-30s %-15s %-15s %-12.3f %-12.3f %-10.3f%n",
+						"%-15d %-30s %-15s %-15s %-12f %-12f %-10f%n",
 						resultSet.getInt("circuitId"),
 						resultSet.getString("name"),
 						resultSet.getString("location"),
@@ -1135,11 +1129,11 @@ public class Database {
 				System.out.println("There is no driver corresponding to that driver ID.");
 			} else {
 
-				System.out.printf("%-12s %-25s %-15s%n", "Driver ID", "Name", "Nationality");
-				System.out.println("----------------------------------------------------");
+				System.out.printf("%-10s %-25s %-15s%n", "Driver ID", "Name", "Nationality");
+				System.out.println("----------------------------------------------");
 
 				while (resultSet.next()) {
-					System.out.printf("%-12d %-25s %-15s%n", resultSet.getInt("driverId"),
+					System.out.printf("%-10d %-25s %-15s%n", resultSet.getInt("driverId"),
 							resultSet.getString("firstname") + " " + resultSet.getString("lastname"),
 							resultSet.getString("nationality"));
 				}
@@ -1155,7 +1149,7 @@ public class Database {
 
 	// nationality of a given constructor
 	public void constructorsNationality(int constructorId) {
-		String sql = "select * from constructors c where c.constructorId = ?;";
+		String sql = "select nationality from constructors c where c.constructorId = ?;";
 		try {
 
 			PreparedStatement statement = connection.prepareStatement(sql);
@@ -1167,12 +1161,11 @@ public class Database {
 				System.out.println("There is no constructor corresponding to that constructor ID.");
 			} else {
 
-				System.out.printf("%-20s %-30s %-15s%n", "Constructor ID", "Constructor Name", "Nationality");
-				System.out.println("-------------------------------------------------------------------");
+				System.out.printf("%-15s%n", "Nationality");
+				System.out.println("---------------");
 
 				while (resultSet.next()) {
-					System.out.printf("%-20d %-30s %-15s%n", resultSet.getInt("constructorId"),
-							resultSet.getString("name"), resultSet.getString("nationality"));
+					System.out.printf("%-15s%n", resultSet.getString("nationality"));
 				}
 			}
 			System.out.println();
@@ -1200,7 +1193,7 @@ public class Database {
 			} else {
 
 				System.out.printf("%-25s %-9s %-12s%n", "Name", "Season", "Avg Time");
-				System.out.println("-----------------------------------------------");
+				System.out.println("-------------------------------------------");
 
 				while (resultSet.next()) {
 					System.out.printf("%-25s %-9s %-12s%n",
@@ -1265,7 +1258,7 @@ public class Database {
 				int raceId = -1;
 
 				System.out.printf("%-12s %-30s %-6s%n", "Race ID", "Name", "DNFs");
-				System.out.println("--------------------------------------------------");
+				System.out.println("--------------------------------------------");
 
 				while (resultSet.next()) {
 					raceId = resultSet.getInt("raceId");
@@ -1276,18 +1269,16 @@ public class Database {
 							resultSet.getInt("fps"));
 				}
 
-				System.out.println();
-
 				Statement secondStatement = connection.createStatement();
 				ResultSet rs2 = secondStatement.executeQuery(
 						"select d.driverId, d.firstname, d.lastname from drivers d join driverRaces dr on dr.driverId = d.driverId where dr.raceId = "
 								+ raceId + " and dr.finalPosition = -1");
 
-				System.out.printf("%-12s %-25s%n", "Driver ID", "Name");
-				System.out.println("--------------------------------");
+				System.out.printf("%-10s %-25s%n", "Driver ID", "Name");
+				System.out.println("----------------------------------------");
 				while (rs2.next()) {
-					System.out.printf("%-12d %-25s%n", rs2.getInt("driverId"),
-							rs2.getString("firstname") + " " + rs2.getString("lastname"));
+					System.out.printf("%-10d %-25s%n", resultSet.getInt("driverId"),
+							resultSet.getString("firstname") + " " + resultSet.getString("lastname"));
 				}
 			}
 
@@ -1306,14 +1297,13 @@ public class Database {
 
 			PreparedStatement statement = connection.prepareStatement(sql);
 
-			statement.setInt(1, driverId);
 			ResultSet resultSet = statement.executeQuery();
 			if (!resultSet.isBeforeFirst()) {
 				System.out.println("There is no driver corresponding to that driver ID.");
 			} else {
 
 				System.out.printf("%-12s%n", "Wins");
-				System.out.println("---------");
+				System.out.println("------------");
 
 				while (resultSet.next()) {
 					System.out.printf("%-12d%n", resultSet.getInt("wins"));
@@ -1324,12 +1314,13 @@ public class Database {
 				PreparedStatement secondStatement = connection.prepareStatement(
 						"select dc.year from driverChampionships dc where dc.driverId = ? and dc.winner = 1;");
 
+				statement.setInt(1, driverId);
 				secondStatement.setInt(1, driverId);
 
 				ResultSet resultSet2 = secondStatement.executeQuery();
 
 				System.out.printf("%-8s%n", "Seasons");
-				System.out.println("---------");
+				System.out.println("----------");
 				while (resultSet2.next()) {
 					System.out.printf("%-8s%n", resultSet2.getInt("year"));
 				}

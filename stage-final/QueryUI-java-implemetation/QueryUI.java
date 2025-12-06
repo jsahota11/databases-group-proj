@@ -351,7 +351,7 @@ public class QueryUI {
                     break;
                 case 5:
                     System.out.println(
-                            "[SYSTEM] To query for 'Constructor's total of participated championships', key in: constructor ID\n");
+                            "[SYSTEM] To query for 'Constructor's total number of participated championships', key in: constructor ID\n");
                     System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateConstQueryInput(dbCommand, input)) {
@@ -581,20 +581,16 @@ public class QueryUI {
                     if (!isValidNumInput(tokens[0])) { // non-numeric input -> valid
                         if (tokens[0].toLowerCase().equals("h")) { // if it's 'h' -> exit
                             exit = true;
-                        }
-                        else {
+                        } else {
                             System.out.println("[ERROR] Invalid input! Try again.\n");
                         }
-                    }
-                    else {
+                    } else {
                         System.out.println("[ERROR] Invalid input! Try again.");
                     }
-                }
-                else {
+                } else {
                     System.out.println("[ERROR] Invalid input! Try again.");
                 }
-            }
-            else {
+            } else {
                 System.out.println("[ERROR] Invalid input! Try again.");
             }
         }
@@ -619,7 +615,8 @@ public class QueryUI {
                 "--- GENERAL ---\n" +
                 BLUE + "10. " + YELLOW + "Help Menu\n" +
                 BLUE + "11. " + YELLOW + "Quit application\n" +
-                BLUE + "12. " + YELLOW + "Repopulate data base \u001B[31m(WARNING!!! This might take 30 MINS ~ 2 HRS)\u001B[0m\n\n" + RESET +
+                BLUE + "12. " + YELLOW
+                + "Repopulate data base \u001B[31m(WARNING!!! This might take 30 MINS ~ 2 HRS)\u001B[0m\n\n" + RESET +
                 "[SYSTEM] Note for look-up commands, ensure they are exactly one space apart (for multiple arguments) when keying in or it will be considered invalid!");
     }
 
@@ -1078,13 +1075,13 @@ public class QueryUI {
         System.out.println("--- GENERAL DRIVER INFORMATION (1/2) ---");
         System.out.println(
                 BLUE + "1. " + YELLOW + "Driver rankings in a season\n" +
-                BLUE + "2. " + YELLOW + "Driver who has been active the longest in F1\n" +
-                BLUE + "3. " + YELLOW + "Oldest/Youngest driver in a season\n" +
-                BLUE + "4. " + YELLOW + "Driver championship winner in a season\n" +
-                BLUE + "5. " + YELLOW + "Driver with fastest qualifying time in a round\n" +
-                BLUE + "6. " + YELLOW + "Driver with fastest qualifying time in a season\n\n" + RESET +
-                "[SYSTEM] Enter one of the numbered options above (1-6) to get the information you'd like.\n" +
-                "[SYSTEM] Enter 'p 2' to go to Page 2 or 'h' to go back to the Main Menu.\n");
+                        BLUE + "2. " + YELLOW + "Driver who has been active the longest in F1\n" +
+                        BLUE + "3. " + YELLOW + "Oldest/Youngest driver in a season\n" +
+                        BLUE + "4. " + YELLOW + "Driver championship winner in a season\n" +
+                        BLUE + "5. " + YELLOW + "Driver with fastest qualifying time in a round\n" +
+                        BLUE + "6. " + YELLOW + "Driver with fastest qualifying time in a season\n\n" + RESET +
+                        "[SYSTEM] Enter one of the numbered options above (1-6) to get the information you'd like.\n" +
+                        "[SYSTEM] Enter 'p 2' to go to Page 2 or 'h' to go back to the Main Menu.\n");
     }
 
     // Prints page two of query list
@@ -1092,17 +1089,17 @@ public class QueryUI {
         System.out.println("--- SPECIFIC DRIVER INFORMATION (2/2) ---");
         System.out.println(
                 BLUE + "7. " + YELLOW + "Driver's average grid position for all seasons\n" +
-                BLUE + "8. " + YELLOW + "Driver's specific position in specific lap # for a certain race\n" +
-                BLUE + "9. " + YELLOW + "Driver's total points in a specific round\n" +
-                BLUE + "10. " + YELLOW + "Driver's number of participated championships\n" +
-                BLUE + "11. " + YELLOW + "Driver's constructor history\n" +
-                BLUE + "12. " + YELLOW + "Driver's fastest lap in a specific season\n" +
-                BLUE + "13. " + YELLOW + "Driver's active years in F1\n" +
-                BLUE + "14. " + YELLOW + "Driver's nationality\n" +
-                BLUE + "15. " + YELLOW + "Driver's average lap time in a specific season\n" +
-                BLUE + "16. " + YELLOW + "Driver's total number of driver championship wins\n\n" + RESET +
-                "[SYSTEM] Enter one of the numbered options above (7-16) to get the information you'd like.\n" +
-                "[SYSTEM] You may enter 'p 1' to go to Page 1 or 'h' to go back to the Main Menu.\n");
+                        BLUE + "8. " + YELLOW + "Driver's specific position in specific lap # for a certain race\n" +
+                        BLUE + "9. " + YELLOW + "Driver's total points in a specific round\n" +
+                        BLUE + "10. " + YELLOW + "Driver's number of participated championships\n" +
+                        BLUE + "11. " + YELLOW + "Driver's constructor history\n" +
+                        BLUE + "12. " + YELLOW + "Driver's fastest lap in a specific season\n" +
+                        BLUE + "13. " + YELLOW + "Driver's active years in F1\n" +
+                        BLUE + "14. " + YELLOW + "Driver's nationality\n" +
+                        BLUE + "15. " + YELLOW + "Driver's average lap time in a specific season\n" +
+                        BLUE + "16. " + YELLOW + "Driver's total number of driver championship wins\n\n" + RESET +
+                        "[SYSTEM] Enter one of the numbered options above (7-16) to get the information you'd like.\n" +
+                        "[SYSTEM] You may enter 'p 1' to go to Page 1 or 'h' to go back to the Main Menu.\n");
     }
 
     /**
@@ -1746,10 +1743,11 @@ public class QueryUI {
     private static void printHelpMenu() {
         System.out.println("--- HELP MENU ---\n" +
                 "Hello user, we are \u001b[35mTEAM VROOM!\u001B[0m\n" +
-                "We've developed this UI so you can easily search information within the Formula 1 World Championship (1954-2025) database.\n\n" +
-                "Note that for all queries and searches, \u001b[3m\u001b[92myou may be required to input an ID\u001B[0m. In order to know a particular race, driver, etc. ID, you may\n" +
-                "do a look-up through our 'Print all XYZ information' menu options. Thank you and have fun!\n"
-            );
+                "We've developed this UI so you can easily search information within the Formula 1 World Championship (1954-2025) database.\n\n"
+                +
+                "Note that for all queries and searches, \u001b[3m\u001b[92myou may be required to input an ID\u001B[0m. In order to know a particular race, driver, etc. ID, you may\n"
+                +
+                "do a look-up through our 'Print all XYZ information' menu options. Thank you and have fun!\n");
         System.out.println("[SYSTEM] Enter 'h' to go back to the Main Menu");
     }
 
@@ -1770,49 +1768,60 @@ public class QueryUI {
             switch (dataType) {
                 case "Drivers":
                     System.out.printf("%-15s | %-30s | %-15s | %-15s%n", "Driver ID", "Name", "DOB", "Nationality");
-                    System.out.printf("%-15s | %-30s | %-15s | %-15s%n", "----------", "--------------------", "----------", "----------");
+                    System.out.printf("%-15s | %-30s | %-15s | %-15s%n", "----------", "--------------------",
+                            "----------", "----------");
                     break;
                 case "Constructors":
                     System.out.printf("%-15s | %-30s | %-15s%n", "Constructor ID", "Name", "Nationality");
                     System.out.printf("%-15s | %-30s | %-15s%n", "----------", "--------------------", "----------");
                     break;
                 case "Races":
-                    System.out.printf("%-15s | %-15s | %-15s | %-30s | %-12s | %-12s%n", "RaceID", "Round", "Date", "Name", "Circuit ID", "Season/Year");
-                    System.out.printf("%-15s | %-15s | %-15s | %-30s | %-12s | %-12s%n", "----------", "----------", "----------", "--------------------", "--------", "--------");
+                    System.out.printf("%-15s | %-15s | %-15s | %-30s | %-12s | %-12s%n", "RaceID", "Round", "Date",
+                            "Name", "Circuit ID", "Season/Year");
+                    System.out.printf("%-15s | %-15s | %-15s | %-30s | %-12s | %-12s%n", "----------", "----------",
+                            "----------", "--------------------", "--------", "--------");
                     break;
                 case "Circuits":
-                    System.out.printf("%-15s | %-40s | %-30s | %-15s | %-12s | %-12s | %-12s%n", "Circuit ID", "Name", "Location", "Country", "Latitude", "Longitude", "Altitude");
-                    System.out.printf("%-15s | %-40s | %-30s | %-15s | %-12s | %-12s | %-12s%n", "----------", "--------------------", "--------------------", "----------", "--------", "--------", "--------");
+                    System.out.printf("%-15s | %-40s | %-30s | %-15s | %-12s | %-12s | %-12s%n", "Circuit ID", "Name",
+                            "Location", "Country", "Latitude", "Longitude", "Altitude");
+                    System.out.printf("%-15s | %-40s | %-30s | %-15s | %-12s | %-12s | %-12s%n", "----------",
+                            "--------------------", "--------------------", "----------", "--------", "--------",
+                            "--------");
                     break;
             }
-            for (int i = currPage * ITEMS_PER_PAGE; i < Math.min(currPage * ITEMS_PER_PAGE + ITEMS_PER_PAGE, data.length); i++) {
+            for (int i = currPage * ITEMS_PER_PAGE; i < Math.min(currPage * ITEMS_PER_PAGE + ITEMS_PER_PAGE,
+                    data.length); i++) {
                 String[] tokens = data[i].split(",");
-                switch (dataType){ // change format depending on data type
-                case "Drivers":    
-                    System.out.printf("%-15s | %-30s | %-15s | %-15s%n", tokens[0], tokens[1], tokens[2], tokens[3]);
-                    break;
-                case "Constructors":
-                    System.out.printf("%-15s | %-30s | %-15s%n", tokens[0], tokens[1], tokens[2]);
-                    break;
-                case "Races":
-                    System.out.printf("%-15s | %-15s | %-15s | %-30s | %-12s | %-12s%n", tokens[0], tokens[1], tokens[2], tokens[3], tokens [4], tokens[5]);
-                    break;
-                case "Circuits":
-                    System.out.printf("%-15s | %-40s | %-30s | %-15s | %-12s | %-12s | %-12s%n", tokens[0], tokens[1], tokens[2], tokens[3], tokens [4], tokens[5], tokens[6]);
-                    break;
+                switch (dataType) { // change format depending on data type
+                    case "Drivers":
+                        System.out.printf("%-15s | %-30s | %-15s | %-15s%n", tokens[0], tokens[1], tokens[2],
+                                tokens[3]);
+                        break;
+                    case "Constructors":
+                        System.out.printf("%-15s | %-30s | %-15s%n", tokens[0], tokens[1], tokens[2]);
+                        break;
+                    case "Races":
+                        System.out.printf("%-15s | %-15s | %-15s | %-30s | %-12s | %-12s%n", tokens[0], tokens[1],
+                                tokens[2], tokens[3], tokens[4], tokens[5]);
+                        break;
+                    case "Circuits":
+                        System.out.printf("%-15s | %-40s | %-30s | %-15s | %-12s | %-12s | %-12s%n", tokens[0],
+                                tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6]);
+                        break;
                 }
             }
-            System.out.println("[SYSTEM] Enter a valid page number between 1 - " + maxPages + " to change between pages or any other key to exit.");
+            System.out.println("[SYSTEM] Enter a valid page number between 1 - " + maxPages
+                    + " to change between pages or any other key to exit.");
             System.out.print("db > ");
             String input = sc.nextLine();
             String cleanStr = input.strip().replaceAll("\\s+", "");
-            if (isValidNumInput(cleanStr) && Integer.parseInt(cleanStr) <= maxPages && Integer.parseInt(cleanStr) >= 0) {
+            if (isValidNumInput(cleanStr) && Integer.parseInt(cleanStr) <= maxPages
+                    && Integer.parseInt(cleanStr) >= 0) {
                 currPage = Integer.parseInt(cleanStr) - 1;
                 displayPage = currPage + 1;
                 System.out.println();
                 System.out.println();
-            }
-            else {
+            } else {
                 exit = true;
                 System.out.println("[SYSTEM] Going back to main menu. . .");
             }

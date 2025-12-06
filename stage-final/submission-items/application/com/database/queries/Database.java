@@ -819,7 +819,7 @@ public class Database {
 			} else {
 
 				System.out.printf("%-15s %-30s %-10s %-12s%n", "Driver ID", "Name", "Race ID", "Qual Time");
-				System.out.println("---------------------------------------------------------------");
+				System.out.println("-------------------------------------------------------------------------");
 
 				while (resultSet.next()) {
 					System.out.printf(
@@ -827,7 +827,8 @@ public class Database {
 							resultSet.getInt("driverId"),
 							resultSet.getString("firstname") + " " + resultSet.getString("lastname"),
 							resultSet.getInt("raceId"),
-							resultSet.getTime("qualTime"));
+							String.format("%tT.%03d", resultSet.getTime("qualTime"),
+									resultSet.getTime("qualTime").getTime() % 1000));
 				}
 			}
 
@@ -857,15 +858,15 @@ public class Database {
 			} else {
 
 				System.out.printf("%-15s %-30s %-10s %-12s%n", "Driver ID", "Name", "Race ID", "Qual Time");
-				System.out.println("---------------------------------------------------------------");
+				System.out.println("-------------------------------------------------------------------------");
 
 				while (resultSet.next()) {
 					System.out.printf(
 							"%-15d %-30s %-10d %-12s%n",
 							resultSet.getInt("driverId"),
 							resultSet.getString("firstname") + " " + resultSet.getString("lastname"),
-							resultSet.getInt("raceId"),
-							resultSet.getString("qualTime"));
+							resultSet.getInt("raceId"), String.format("%tT.%03d", resultSet.getTime("qualTime"),
+									resultSet.getTime("qualTime").getTime() % 1000));
 				}
 			}
 			System.out.println();

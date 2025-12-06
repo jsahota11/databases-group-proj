@@ -144,7 +144,7 @@ public class QueryUI {
                     break;
                 case 5:
                     System.out.println(
-                            "[SYSTEM] To query for 'Driver with fastest qualifying time in a round', key in: raceID\n");
+                            "[SYSTEM] To query for 'Drivers with fastest qualifying times in a round', key in: raceID\n");
                     System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
@@ -156,7 +156,7 @@ public class QueryUI {
                     break;
                 case 6:
                     System.out.println(
-                            "[SYSTEM] To query for 'Driver with fastest qualifying time in a season', key in: year\n");
+                            "[SYSTEM] To query for 'Drivers with fastest qualifying times in a season', key in: year\n");
                     System.out.print("db > ");
                     dbCommand = sc.nextLine().strip();
                     if (validateDrQueryInput(dbCommand, input)) {
@@ -1077,8 +1077,8 @@ public class QueryUI {
                         BLUE + "2. " + YELLOW + "Driver who has been active the longest in F1\n" +
                         BLUE + "3. " + YELLOW + "Oldest/Youngest driver in a season\n" +
                         BLUE + "4. " + YELLOW + "Driver championship winner in a season\n" +
-                        BLUE + "5. " + YELLOW + "Driver with fastest qualifying time in a round\n" +
-                        BLUE + "6. " + YELLOW + "Driver with fastest qualifying time in a season\n\n" + RESET +
+                        BLUE + "5. " + YELLOW + "Drivers with fastest qualifying times in a round\n" +
+                        BLUE + "6. " + YELLOW + "Drivers with fastest qualifying times in a season\n\n" + RESET +
                         "[SYSTEM] Enter one of the numbered options above (1-6) to get the information you'd like.\n" +
                         "[SYSTEM] Enter 'p 2' to go to Page 2 or 'h' to go back to the Main Menu.\n");
     }

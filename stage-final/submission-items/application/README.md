@@ -49,3 +49,6 @@ Below are my credentials for the Uranium DB, but I will say again that you do no
 or use these for our application, they are already being employed in the software.
 User: sahotaj2
 Pass: 7968392
+
+Heather said on Piazza that we should either include the raw data in our submission or a link to it if it is too big, below is a link to the dataset that we used.
+<https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020>

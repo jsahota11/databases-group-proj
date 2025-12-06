@@ -521,7 +521,7 @@ public class QueryUI {
             switch (input) { // diff query cases
                 case 1:
                     System.out.println(
-                            "[SYSTEM] Querying for. . . 'Nationality whose drivers perform the fastest on circuits located in home-country', key in: year\n");
+                            "[SYSTEM] Querying for. . . 'Nationality whose drivers perform the fastest on circuits located in home-country'\n");
                     fastestNationalityInHomeCircuit();
                     break;
                 case 2:

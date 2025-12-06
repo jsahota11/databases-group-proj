@@ -1,5 +1,5 @@
 BEGIN TRANSACTION;
-CREATE TABLE "driverRaces" ("driverId"	INTEGER,"raceId"	INTEGER,"finalPosition"	INTEGER,"gridPosition"	INTEGER,"points"	REAL,"qual1"	TEXT,"qual2"	TEXT,"qual3"	TEXT,PRIMARY KEY("driverId","raceId"),FOREIGN KEY("driverId") REFERENCES "drivers"("driverId"),FOREIGN KEY("raceId") REFERENCES "races"("raceId"));
+CREATE TABLE "driverRaces" ("driverId"	INTEGER,"raceId"	INTEGER,"finalPosition"	INTEGER,"gridPosition"	INTEGER,"points"	REAL,"qual1"	TIME,"qual2"	TIME,"qual3"	TIME,PRIMARY KEY("driverId","raceId"),FOREIGN KEY("driverId") REFERENCES "drivers"("driverId"),FOREIGN KEY("raceId") REFERENCES "races"("raceId"));
 INSERT INTO "driverRaces" ("driverId","raceId","finalPosition","gridPosition","points","qual1","qual2","qual3") VALUES (1,1,-1,18,0.0,'00:01:26.4540000','NULL','NULL');
 INSERT INTO "driverRaces" ("driverId","raceId","finalPosition","gridPosition","points","qual1","qual2","qual3") VALUES (1,2,7,12,1.0,'00:01:35.2800000','00:01:34.9050000','NULL');
 INSERT INTO "driverRaces" ("driverId","raceId","finalPosition","gridPosition","points","qual1","qual2","qual3") VALUES (1,3,6,9,3.0,'00:01:35.7760000','00:01:35.7400000','00:01:38.5950000');

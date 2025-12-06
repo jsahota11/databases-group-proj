@@ -1742,11 +1742,11 @@ public class QueryUI {
     private static void printHelpMenu() {
         System.out.println("--- HELP MENU ---\n" +
                 "Hello user, we are \u001b[35mTEAM VROOM!\u001B[0m\n" +
-                "We've developed this UI so you can easily search information within the Formula 1 World Championship (1954-2025) database.\n\n"
+                "We've developed this UI so you can easily search information within the Formula 1 World Championship (1950-2024) database.\n\n"
                 +
                 "Note that for all queries and searches, \u001b[3m\u001b[92myou may be required to input an ID\u001B[0m. In order to know a particular race, driver, etc. ID, you may\n"
                 +
-                "do a look-up through our 'Print all XYZ information' menu options. Thank you and have fun!\n");
+                "do a look-up through our 'Print all XYZ information' menu options (6-9). Thank you and have fun!\n");
         System.out.println("[SYSTEM] Enter 'h' to go back to the Main Menu");
     }
 

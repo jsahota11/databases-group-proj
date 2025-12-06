@@ -9,8 +9,8 @@ To rebuild and repopulate the DB, run the program and enter 12 on the main menu 
 Alternatively, `build` is in the recipe of `run` so you can also just use `make run` if you'd like.
 If you decide to `make clean`, then `build` will have to run before `run`.
 
-`make build` has already been invoked before submitting, so starting the program shouldn't take long.
-You only need to type `make run` to run the program.
+`make build` has not been invoked in case Java versions clash. The dependencies will build upon first run.
+I recommend just using `make clean` and then `make run`.
 
 Upon starting the application, you will be greeted with an interface. The instructions are contained
 in the main menu, including any options and interactive capabilities. Pick any menu option, and enter

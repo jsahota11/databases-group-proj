@@ -1488,14 +1488,21 @@ public class Database {
 	public void resetServer() {
 		String makeRelative = "data-sql/";
 		Scanner sc = null;
-		File[] files = { new File(makeRelative + "drop-tables.sql"), new File(makeRelative + "seasons.sql"),
-				new File(makeRelative + "locale.sql"),
-				new File(makeRelative + "circuits.sql"), new File(makeRelative + "drivers.sql"),
-				new File(makeRelative + "constructors.sql"), new File(makeRelative + "races.sql"),
-				new File(makeRelative + "laps.sql"), new File(makeRelative + "partOf.sql"),
-				new File(makeRelative + "driverRaces.sql"), new File(makeRelative + "driverChampionships.sql"),
-				new File(makeRelative + "constructorRaces.sql"),
-				new File(makeRelative + "constructorChampionships.sql") };
+		File[] files = {
+				// new File(makeRelative + "drop-tables.sql"),
+				// new File(makeRelative + "seasons.sql"),
+				// new File(makeRelative + "locale.sql"),
+				// new File(makeRelative + "circuits.sql"),
+				// new File(makeRelative + "drivers.sql"),
+				// new File(makeRelative + "constructors.sql"),
+				// new File(makeRelative + "races.sql"),
+				// new File(makeRelative + "laps.sql"),
+				// new File(makeRelative + "partOf.sql"),
+				new File(makeRelative + "driverRaces.sql"),
+				// new File(makeRelative + "driverChampionships.sql"),
+				// new File(makeRelative + "constructorRaces.sql"),
+				// new File(makeRelative + "constructorChampionships.sql")
+		};
 
 		for (File file : files) {
 
